@@ -1,0 +1,30 @@
+@import './../../styles/mixins.pcss';
+
+.error-page {
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    
+    .title {
+        @mixin text-font 40px;
+    }
+
+    .subtitle {
+        margin-top: 20px;
+        @mixin text-font 20px;
+    }
+
+    .link {
+        margin-top: 70px;
+        @mixin text-font 11px;
+        text-decoration: none;
+        color: var(--primary-color);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

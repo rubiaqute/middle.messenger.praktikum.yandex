@@ -1,6 +1,7 @@
 import postcssPresetEnv from "postcss-preset-env";
 import autoprefixer from "autoprefixer";
+import postcssMixins from "postcss-mixins"
 
 export default {
-  plugins: [postcssPresetEnv(), autoprefixer()],
+  plugins: [postcssMixins(), postcssPresetEnv(), autoprefixer(), ],
 };
