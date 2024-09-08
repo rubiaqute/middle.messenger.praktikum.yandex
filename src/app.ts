@@ -68,6 +68,16 @@ export default class App {
                     this.appElement.innerHTML = template({})
                     break;
                 }
+                case Page.chat: {
+                    template = Handlebars.compile(Pages.ChatPage);
+                    this.appElement.innerHTML = template({})
+                    break;
+                }
+                case Page.profile: {
+                    template = Handlebars.compile(Pages.ProfilePage);
+                    this.appElement.innerHTML = template({})
+                    break;
+                }
             }
 
             this.attachEventListeners();
