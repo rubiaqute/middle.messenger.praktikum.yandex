@@ -1,0 +1,12 @@
+@import './../../styles/mixins.pcss';
+
+.link {
+    text-decoration: none;
+    color: var(--primary-color);
+    @mixin text-font 11px;
+
+    &:hover {
+        text-decoration: underline;
+        transition: 0.3s ease-in;
+    }
+}

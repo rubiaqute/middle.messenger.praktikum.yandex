@@ -1,22 +1,12 @@
 import Handlebars from 'handlebars';
 import * as Pages from './pages';
 
-// Register partials
-// import Input from './components/Input.js';
-// import Button from './components/Button.js';
-// import Select from './components/Select.js';
-// import ErrorMessage from './components/ErrorMessage.js';
-// import Link from './components/Link.js';
-// import Label from './components/Label.js';
-// import Footer from './components/Footer.js';
+import { FormInput, Link, Button } from './components';
 
-// Handlebars.registerPartial('Input', Input);
-// Handlebars.registerPartial('Button', Button);
-// Handlebars.registerPartial('Select', Select);
-// Handlebars.registerPartial('ErrorMessage', ErrorMessage);
-// Handlebars.registerPartial('Link', Link);
-// Handlebars.registerPartial('Label', Label);
-// Handlebars.registerPartial('Footer', Footer);
+
+Handlebars.registerPartial('FormInput', FormInput);
+Handlebars.registerPartial('Button', Button);
+Handlebars.registerPartial('Link', Link);
 
 enum Page {
     login='login',
@@ -28,15 +18,15 @@ enum Page {
 }
 
 export default class App {
-    currentPage = Page.login
-    appElement: HTMLElement | null
+    private currentPage = Page.login
+    private appElement: HTMLElement | null
 
     constructor() {
         this.appElement = document.getElementById('app');
     }
 
     private updateCurrentPage(urlPath?: string) {
-        const path = urlPath?.replace('/', '')
+        const path = urlPath?.replace('/', '') 
 
         if (path === '/' || !path) {
             this.currentPage = Page.login
@@ -73,6 +63,11 @@ export default class App {
                     })
                     break;
                 }
+                case Page.registration: {
+                    template = Handlebars.compile(Pages.RegistrationPage);
+                    this.appElement.innerHTML = template({})
+                    break;
+                }
             }
 
             this.attachEventListeners();
@@ -80,32 +75,24 @@ export default class App {
     }
     
 
-    attachEventListeners() {
+    private attachEventListeners() {
         const links = document.querySelectorAll('.link');
         links.forEach(link => link.addEventListener('click', (e) => this.changePage((e.target as HTMLLinkElement).dataset?.page as Page)));
+
+        const formLogin = document.querySelector('#formLogin');
+        formLogin?.addEventListener('submit', (e)=> {
+            e.preventDefault()
+            console.log("Send login")
+        })
+
+        const formRegistration = document.querySelector('#formRegistration');
+        formRegistration?.addEventListener('submit', (e) => {
+            e.preventDefault()
+            console.log("Send registration")
+        })
     }
 
-    changePage(page: Page) {
+    private changePage(page: Page) {
         this.render(page);
     }
-
-    // addQuestion() {
-    //     const questionInput = document.getElementById('question-input');
-    //     if (questionInput.value.trim()) {
-    //         this.state.questions.push(questionInput.value);
-    //         questionInput.value = '';
-    //         this.render();
-    //     }
-    // }
-
-    // createQuestionnaire() {
-    //     if (this.state.questions.length > 0) {
-    //         this.state.currentPage = 'answerQuestionnaire';
-    //         this.render();
-    //     }
-    // }
-
-    // submitAnswers() {
-    //     alert('Answers submitted!');
-    // }
 }
