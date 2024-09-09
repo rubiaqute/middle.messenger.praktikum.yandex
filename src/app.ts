@@ -1,12 +1,15 @@
 import Handlebars from 'handlebars';
 import * as Pages from './pages';
 
-import { FormInput, Link, Button } from './components';
+import { FormInput, Link, Button, SidePanel, ProfileInput } from './components';
+import { profileData } from './mock';
 
 
 Handlebars.registerPartial('FormInput', FormInput);
 Handlebars.registerPartial('Button', Button);
 Handlebars.registerPartial('Link', Link);
+Handlebars.registerPartial('SidePanel', SidePanel);
+Handlebars.registerPartial('ProfileInput', ProfileInput);
 
 enum Page {
     login='login',
@@ -14,7 +17,9 @@ enum Page {
     profile = 'profile',
     chat = 'chat',
     notFoundError = '404',
-    serverError = '500'
+    serverError = '500',
+    profileEdit="profile-edit",
+    profilePassword="profile-password"
 }
 
 export default class App {
@@ -28,27 +33,25 @@ export default class App {
     private updateCurrentPage(urlPath?: string) {
         const path = urlPath?.replace('/', '') 
 
-        if (path === '/' || !path) {
+        if (!path) {
             this.currentPage = Page.login
         } else {
             this.currentPage = Object.values(Page).includes(path as Page) ? path as Page : Page.notFoundError
         }
     }
 
-
     render(urlPath?: string) {
         if (this.appElement) {
             this.updateCurrentPage(urlPath)
-            let template;
 
             switch (this.currentPage) {
                 case Page.login: {
-                    template = Handlebars.compile(Pages.LoginPage);
+                    const template = Handlebars.compile(Pages.LoginPage);
                     this.appElement.innerHTML = template({})
                     break;
                 }
                 case Page.notFoundError: {
-                    template = Handlebars.compile(Pages.ErrorPage);
+                    const template = Handlebars.compile(Pages.ErrorPage);
                     this.appElement.innerHTML = template({
                         title: '404',
                         subTitle: 'Не туда попали'
@@ -56,7 +59,7 @@ export default class App {
                     break;
                 }
                 case Page.serverError: {
-                    template = Handlebars.compile(Pages.ErrorPage);
+                    const template = Handlebars.compile(Pages.ErrorPage);
                     this.appElement.innerHTML = template({
                         title: '500',
                         subTitle: 'Мы уже фиксим'
@@ -64,18 +67,39 @@ export default class App {
                     break;
                 }
                 case Page.registration: {
-                    template = Handlebars.compile(Pages.RegistrationPage);
+                    const template = Handlebars.compile(Pages.RegistrationPage);
                     this.appElement.innerHTML = template({})
                     break;
                 }
                 case Page.chat: {
-                    template = Handlebars.compile(Pages.ChatPage);
+                    const template = Handlebars.compile(Pages.ChatPage);
                     this.appElement.innerHTML = template({})
                     break;
                 }
                 case Page.profile: {
-                    template = Handlebars.compile(Pages.ProfilePage);
-                    this.appElement.innerHTML = template({})
+                    const template = Handlebars.compile(Pages.ProfilePage);
+                    this.appElement.innerHTML = template({
+                        profileData,
+                        disabled: 'disabled',
+                        isWithSaveButton: false,
+                    })
+                    break;
+                }
+                case Page.profileEdit: {
+                    const template = Handlebars.compile(Pages.ProfilePage);
+                    this.appElement.innerHTML = template({
+                        profileData,
+                        isWithSaveButton: true,
+                    })
+                    break;
+                }
+                case Page.profilePassword: {
+                    const template = Handlebars.compile(Pages.ProfilePage);
+                    this.appElement.innerHTML = template({
+                        profileData,
+                        isWithSaveButton: true,
+                        isChangePasswordMode: true
+                    })
                     break;
                 }
             }
@@ -86,11 +110,8 @@ export default class App {
     
 
     private attachEventListeners() {
-        const links = document.querySelectorAll('.link');
-        links.forEach(link => link.addEventListener('click', (e) => this.changePage((e.target as HTMLLinkElement).dataset?.page as Page)));
-
         const formLogin = document.querySelector('#formLogin');
-        formLogin?.addEventListener('submit', (e)=> {
+        formLogin?.addEventListener('submit', (e) => {
             e.preventDefault()
             console.log("Send login")
         })
@@ -102,7 +123,4 @@ export default class App {
         })
     }
 
-    private changePage(page: Page) {
-        this.render(page);
-    }
 }

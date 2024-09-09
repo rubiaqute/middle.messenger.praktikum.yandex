@@ -2,3 +2,20 @@
     font-size: $size;
     line-height: $size;
 }
+
+@define-mixin button {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    width: 100%;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+        transition: 0.3s ease-in;
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+}
