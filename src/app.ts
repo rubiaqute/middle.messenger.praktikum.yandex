@@ -1,15 +1,15 @@
 import Handlebars from 'handlebars';
 import * as Pages from './pages';
 
-import { FormInput, Link, Button, SidePanel, ProfileInput } from './components';
+import { FormInput, Link, Button, SidePanel, ProfileInput, Avatar } from './components';
 import { profileData } from './mock';
-
 
 Handlebars.registerPartial('FormInput', FormInput);
 Handlebars.registerPartial('Button', Button);
 Handlebars.registerPartial('Link', Link);
 Handlebars.registerPartial('SidePanel', SidePanel);
 Handlebars.registerPartial('ProfileInput', ProfileInput);
+Handlebars.registerPartial('Avatar', Avatar);
 
 enum Page {
     login='login',
@@ -81,7 +81,6 @@ export default class App {
                     this.appElement.innerHTML = template({
                         profileData,
                         disabled: 'disabled',
-                        isWithSaveButton: false,
                     })
                     break;
                 }
@@ -114,12 +113,21 @@ export default class App {
         formLogin?.addEventListener('submit', (e) => {
             e.preventDefault()
             console.log("Send login")
+            window.location.pathname = `/${Page.chat}`
         })
 
         const formRegistration = document.querySelector('#formRegistration');
         formRegistration?.addEventListener('submit', (e) => {
             e.preventDefault()
             console.log("Send registration")
+            window.location.pathname = `/${Page.login}`
+        })
+
+        const formProfile = document.querySelector('#formProfile');
+        formProfile?.addEventListener('submit', (e) => {
+            e.preventDefault()
+            console.log("Save profile")
+            window.location.pathname = `/${Page.profile}`
         })
     }
 
