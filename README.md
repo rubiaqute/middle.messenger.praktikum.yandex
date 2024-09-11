@@ -17,3 +17,12 @@
 * Приложение будет запущено на  `http://localhost:3000`
 
 ## Страницы
+
+Приложение - `https://rubiaqute-messenger.netlify.app`
+Логин - `https://rubiaqute-messenger.netlify.app`
+Регистрация - `https://rubiaqute-messenger.netlify.app/registration`
+Профиль - `https://rubiaqute-messenger.netlify.app/profile`
+Изменить пароль - `https://rubiaqute-messenger.netlify.app/profile-password`
+Изменить данные - `https://rubiaqute-messenger.netlify.app/profile-edit`
+404 - `https://rubiaqute-messenger.netlify.app/404`
+500 - `https://rubiaqute-messenger.netlify.app/500`
