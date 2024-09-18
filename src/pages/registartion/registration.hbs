@@ -1,0 +1,21 @@
+<div class="registration-container">
+  <h1 class="title">Регистрация</h1>
+  <form class='form-registration' action="submit" id="formRegistration">
+    <div class="fields-block">
+      {{> FormInput name="email" label="Почта" type="email"}}
+      {{> FormInput name="login" label="Логин" type="text"}}
+      {{> FormInput name="first_name" label="Имя" type="text"}}
+      {{> FormInput name="second_name" label="Фамилия" type="text"}}
+      {{> FormInput name="phone" label="Телефон" type="text"}}
+      {{> FormInput name="password" label="Пароль" type="password"}}
+      {{> FormInput name="password" label="Пароль (еще раз)" type="password"}}
+    </div>
+
+    {{> Button text="Зарегистрироваться" id="registration"}}
+    
+    <div class="link-block">
+      {{> Link href="/" text="Войти" page="login"}}
+    </div>
+    
+  </form>
+</div>

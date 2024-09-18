@@ -1,0 +1,15 @@
+<div class="login-container">
+  <h1 class="title">Вход</h1>
+  <form class='form-login' action="submit" id="formLogin">
+    <div class="fields-block">
+      {{> FormInput name="login" label="Логин" type="text"}}
+      {{> FormInput name="password" label="Пароль" type="password"}}
+    </div>
+
+    {{> Button text="Авторизоваться" id="login"}}
+    <div class="link-block">
+      {{> Link href="/registration" text="Нет аккаунта?" page="registration"}}
+    </div>
+    
+  </form>
+</div>

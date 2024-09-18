@@ -1,0 +1,21 @@
+@import './mixins.pcss';
+
+:root {
+  --primary-color: #197c77;
+  --background-color: #FFFFFF;
+  --text-color: #1E1E1E;
+  --caption-color: #999999;
+  --error-color: #FF2F2F;
+}
+
+body {
+  margin: 0 auto;
+  color: var(--text-color);
+  font-family: Inter;
+  font-weight: 500;
+  @mixin text-font 13px;
+}
+
+h1 {
+  @mixin text-font 20px;
+}

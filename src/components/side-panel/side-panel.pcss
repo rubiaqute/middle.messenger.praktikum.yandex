@@ -1,0 +1,25 @@
+@import './../../styles/mixins.pcss';
+
+.side-panel {
+    background-color: #FBFBFB;
+    border-right: 1px solid #EAEAEA;
+    width: 64px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    .button-wrapper {
+        width: 28px;
+        height: 28px;
+        margin: auto;
+
+        .back-button {
+            height: 100%;
+            border-radius: 50%;
+            @mixin button;
+            @mixin text-font 14px;
+        }
+    }
+}

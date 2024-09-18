@@ -1,0 +1,39 @@
+<div class="profile-container">
+  {{> SidePanel}}
+  <div class="main-panel">
+    {{> Avatar}}
+    <h1 class="name">{{profileData.firstName}}</h1>
+
+    <form  id="formProfile">
+      <div class="fields-block">
+
+          {{#if isChangePasswordMode}}
+            {{> ProfileInput name="oldPassword" label="Старый пароль" type="password" value=profileData.password}}
+            {{> ProfileInput name="newPassword" label="Новый пароль" type="password"}}
+            {{> ProfileInput name="newPassword" label="Повторите новый пароль" type="password"}}
+          {{else}}
+            {{> ProfileInput name="email" label="Почта" type="email" value=profileData.email disabled=disabled}}
+            {{> ProfileInput name="login" label="Логин" type="text" value=profileData.login disabled=disabled}}
+            {{> ProfileInput name="first_name" label="Имя" type="text" value=profileData.firstName disabled=disabled}}
+            {{> ProfileInput name="second_name" label="Фамилия" type="text" value=profileData.secondName disabled=disabled}}
+            {{> ProfileInput name="display_name" label="Имя в чате" type="text" value=profileData.displayName disabled=disabled}}
+            {{> ProfileInput name="phone" label="Телефон" type="text" value=profileData.phone disabled=disabled}}
+          {{/if}}
+
+      </div>
+
+      {{#if isWithSaveButton}}
+          <div class="button-wrapper">{{> Button text="Сохранить" id="saveButton"}}</div>
+      {{else}}
+          <div class="links-block">
+            <div class="link-wrapper">{{> Link href="/profile-edit" text="Изменить данные" page="profile-edit"}}</div>
+            <div class="link-wrapper">{{> Link href="/profile-password" text="Изменить пароль" page="profile-password"}}</div>
+            <div class="link-wrapper">{{> Link href="/" text="Выйти" page="login" alert="alert"}}</div>
+          </div>
+      {{/if}}
+      
+  </form>
+
+  </div>
+  
+</div>

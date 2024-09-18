@@ -1,0 +1,24 @@
+@import './../../styles/mixins.pcss';
+
+.field {
+    display: flex;
+    flex-direction: column;
+
+    .label {
+        color: var(--caption-color);
+        @mixin text-font 9px;
+    }
+
+    .input {
+        outline: none;
+        border: none;
+        background-color: var(--background-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding: 7px 0;
+    }
+
+    .label:has(+ .input:placeholder-shown) {
+        display: none;
+    }
+
+}
