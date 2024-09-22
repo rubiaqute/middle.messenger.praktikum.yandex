@@ -1,12 +1,13 @@
 import Handlebars from 'handlebars';
 import * as Pages from './pages';
+import './pages/error/error.pcss';
 
-import { FormInput, Link, Button, SidePanel, ProfileInput, Avatar } from './components';
+import { SidePanel, ProfileInput, Avatar } from './components';
 import { profileData } from './mock';
+import { ErrorPage, loginPage } from './pages';
+import {  renderInDom } from './utils/helpers';
+import { LoginPageProps } from './pages/login/login';
 
-Handlebars.registerPartial('FormInput', FormInput);
-Handlebars.registerPartial('Button', Button);
-Handlebars.registerPartial('Link', Link);
 Handlebars.registerPartial('SidePanel', SidePanel);
 Handlebars.registerPartial('ProfileInput', ProfileInput);
 Handlebars.registerPartial('Avatar', Avatar);
@@ -43,27 +44,34 @@ export default class App {
     render(urlPath?: string) {
         if (this.appElement) {
             this.updateCurrentPage(urlPath)
+            this.appElement.innerHTML = ''
 
             switch (this.currentPage) {
                 case Page.login: {
-                    const template = Handlebars.compile(Pages.LoginPage);
-                    this.appElement.innerHTML = template({})
+                    renderInDom<LoginPageProps>(".app", loginPage);
+
                     break;
                 }
                 case Page.notFoundError: {
-                    const template = Handlebars.compile(Pages.ErrorPage);
-                    this.appElement.innerHTML = template({
+                    const page = new ErrorPage({
                         title: '404',
                         subTitle: 'Не туда попали'
-                    })
+                    }).element
+
+                    if (page) {
+                        this.appElement.appendChild(page)
+                    }
                     break;
                 }
                 case Page.serverError: {
-                    const template = Handlebars.compile(Pages.ErrorPage);
-                    this.appElement.innerHTML = template({
+                    const page = new ErrorPage({
                         title: '500',
                         subTitle: 'Мы уже фиксим'
-                    })
+                    }).element
+
+                    if (page) {
+                        this.appElement.appendChild(page)
+                    }
                     break;
                 }
                 case Page.registration: {

@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "start": "tsc && vite build && node server.cjs",
+    "prebuild": "tsc --noEmit",
+    "build": "npm run prebuild && vite build",
+    "start": "npm run prebuild && vite build && node server.cjs",
     "preview": "vite preview"
   },
   "devDependencies": {
