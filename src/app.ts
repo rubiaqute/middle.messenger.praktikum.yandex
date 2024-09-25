@@ -2,15 +2,11 @@ import Handlebars from 'handlebars';
 import * as Pages from './pages';
 import './pages/error/error.pcss';
 
-import { SidePanel, ProfileInput, Avatar } from './components';
 import { profileData } from './mock';
 import { ErrorPage, loginPage, registrationPage } from './pages';
 import { renderInDom } from './utils/helpers';
 import { BasicBlockProps } from './components/common/block';
 
-Handlebars.registerPartial('SidePanel', SidePanel);
-Handlebars.registerPartial('ProfileInput', ProfileInput);
-Handlebars.registerPartial('Avatar', Avatar);
 
 enum Page {
     login='login',
