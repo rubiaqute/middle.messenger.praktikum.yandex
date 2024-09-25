@@ -1,90 +1,120 @@
-import Handlebars from 'handlebars';
 import { Block } from "../../components/common/block";
 import LoginPageTemplate from './login.hbs?raw';
-import { registerButton, registerFormInput, registerLink } from '../../utils/handlebars-helpers';
-import { getTemplateContent } from '../../utils/helpers';
+import { Button, FormInput, Link } from '../../components';
+import { validateLogin, validatePassword } from "../../utils/validation";
 
-type LoginPageForm = {
-    login: string,
-    password: string
+enum FormInputs {
+    FormInputLogin = 'FormInputLogin',
+    FormInputPassword = 'FormInputPassword'
 }
 
-export interface  LoginPageProps extends Record<string, unknown> {
+type LoginPageForm = {
+    [FormInputs.FormInputLogin]: string,
+    [FormInputs.FormInputPassword]: string
+}
+
+export interface LoginPageProps extends Record<string, unknown> {
     state: {
         values: LoginPageForm
         errors: LoginPageForm
     },
 }
 
-const state = {
-    values: {
-        login: '',
-        password: ''
-    },
-    errors:  {
-        login: '',
-        password: ''
-    }
-}
-
 class LoginPage extends Block<LoginPageProps> {
     formValues: LoginPageForm = {
-        login: '',
-        password: ''
+        [FormInputs.FormInputLogin]: '',
+        [FormInputs.FormInputPassword]: ''
     }
 
-
-    validate() {
-        console.log(this.formValues)
-            // this.setProps({
-            //     state: {
-            //         values: {
-            //             ...this.form,
-            //         },
-            //         errors: {
-            //             ...this.props.state.errors,
-            //             [key]: ''
-            //         }
-            //     }
-            // })      
-    }
-
-    getEvents() {
-        return {
-                input: {
-                    input: (e: Event) => this.changeForm(e),
-                    blur: () => this.validate()
-                },
-                button: {
+    constructor() {
+        super({
+            [FormInputs.FormInputLogin]: new FormInput({
+                _id: 'FormInputLogin',
+                name: 'login',
+                label: 'Логин',
+                type: 'text',
+                value: '',
+                error: '',
+                events: {
+                    change: (e: Event) => this.changeForm(e, FormInputs.FormInputLogin),
+                    blur: (e: Event) => this.validate(e, FormInputs.FormInputLogin)
+                }
+            }),
+            [FormInputs.FormInputPassword]: new FormInput({
+                _id: 'FormInputPassword',
+                name: 'password',
+                label: 'Пароль',
+                type: 'password',
+                value: '',
+                error: '',
+                events: {
+                    change: (e: Event) => this.changeForm(e, FormInputs.FormInputPassword),
+                    blur: (e: Event) => this.validate(e, FormInputs.FormInputPassword)
+                }
+            }),
+            Link: new Link({
+                _id: 'Link',
+                href: "/registration",
+                text: "Нет аккаунта?",
+            }),
+            Button: new Button({
+                _id: 'Button',
+                text: "Авторизоваться",
+                id: "login",
+                events: {
                     click: (e: Event) => this.submitForm(e),
                 }
-        }
+            })
+        })
+    }
+    
+
+
+    validate(e: Event, childKey: FormInputs) {
+        const value = (e.target as HTMLInputElement)?.value  ?? ''
+        const error = childKey === FormInputs.FormInputLogin ? validateLogin(value) : validatePassword(value)
+
+        this.children[childKey].setProps({
+            ...this.children[childKey].props,
+            _id: this.children[childKey].props._id as string,
+            error,
+            value: this.formValues[childKey]
+        })
+          
     }
 
     submitForm(e: Event): void {
-        this.validate()
         e.preventDefault()
+
+        const errors = {
+            [FormInputs.FormInputLogin]: validateLogin(this.formValues[FormInputs.FormInputLogin]),
+            [FormInputs.FormInputPassword]: validatePassword(this.formValues[FormInputs.FormInputPassword])
+        }
+
+        if (Object.values(errors).every((value)=> value === '')) {
+            console.log(this.formValues)
+        }
+
+        Object.values(FormInputs).forEach((input)=>{
+            this.children[input].setProps({
+                ...this.children[input].props,
+                _id: this.children[input].props._id as string,
+                error: errors[input],
+                value: this.formValues[input]
+            })
+        })
     }
 
-
-    changeForm = (e: Event) => {
+    changeForm = (e: Event, key: keyof LoginPageForm) => {
         if (e.target instanceof HTMLInputElement) {
-            const key = e.target.name as keyof LoginPageForm
             this.formValues[key] = e.target.value
         }
     }
 
     render() {
-        registerFormInput()
-        registerButton()
-        registerLink()
-             
-        const template = Handlebars.compile(LoginPageTemplate)
-        const content = template(this.props.state)
-
-        return getTemplateContent(content)
+        return LoginPageTemplate
     }
 }
 
-export const loginPage = new LoginPage({state})
+export const loginPage = new LoginPage()
  

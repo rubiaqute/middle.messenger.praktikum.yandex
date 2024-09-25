@@ -5,7 +5,7 @@ import './pages/error/error.pcss';
 import { SidePanel, ProfileInput, Avatar } from './components';
 import { profileData } from './mock';
 import { ErrorPage, loginPage } from './pages';
-import {  renderInDom } from './utils/helpers';
+import { renderInDom } from './utils/helpers';
 import { LoginPageProps } from './pages/login/login';
 
 Handlebars.registerPartial('SidePanel', SidePanel);

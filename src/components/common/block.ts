@@ -1,33 +1,43 @@
 import { EventBus } from "../../utils/event-bus";
+import Handlebars from 'handlebars';
 
 export interface Events {
-    [tag: string]: {
-        [eventName: string]: Function
-    }
+    [eventName: string]: Function
 }
 
-export abstract class Block<Props extends Record<string, unknown>>{
+export type BasicBlockProps = Record<string, unknown>
+export type ChildProps = Block<{ _id: string, [key: string]: string }>
+
+export abstract class Block<Props extends BasicBlockProps>{
     static EVENTS = {
         INIT: "init",
         FLOW_CDM: "flow:component-did-mount",
         FLOW_RENDER: "flow:render",
         UPDATE: "flow:component-did-update",
-
     };
+
+    children: Record<string, ChildProps> = {}
+    private lists: Record<string, Block<BasicBlockProps>[]> = {};
 
     _element: HTMLElement | null = null;
     _meta: Partial<{
         tagName: string,
-        props: Props
+        props: BasicBlockProps
     }> | null = null;
-    props: Props
+    props: BasicBlockProps
     eventBus: ()=>EventBus
 
-    constructor(props:Props, tagName = "div") {
+    constructor(propsWithChildren: BasicBlockProps, tagName = "div") {
+
+        const { props, children, lists } = this._getChildrenPropsAndProps(propsWithChildren);
+        this.props = this._makePropsProxy(props);
+        this.children = children;
+        this.lists = lists;
         const eventBus = new EventBus();
+
         this._meta = {
             tagName,
-            props
+            props: propsWithChildren
         };
 
 
@@ -47,31 +57,32 @@ export abstract class Block<Props extends Record<string, unknown>>{
     }
 
     _addEvents() {
-        const events = this.getEvents()
-
-        Object.keys(events).forEach((tag)=> {
-            Array.from(this.element?.getElementsByTagName(tag) ?? []).forEach((el) => {
-                const eventsTypes = Object.keys(events[tag])
-
-                eventsTypes.forEach((eventType) => el.addEventListener(eventType, events[tag][eventType] as EventListenerOrEventListenerObject))
-                })
+        const events = (this.props.events ?? {}) as Events
+        Object.keys(events).forEach((eventName)=> {
+            this._element?.addEventListener(eventName, events[eventName] as EventListenerOrEventListenerObject)
         })
+
+        this.addSpecificEvents()
     }
+
+    addSpecificEvents(){}
 
     _removeEvents() {
-        const events = this.getEvents()
-
-        Object.keys(events).forEach((tag) => {
-            Array.from(this.element?.getElementsByTagName(tag) ?? []).forEach((el) => {
-                const eventsTypes = Object.keys(events[tag])
-
-                eventsTypes.forEach((eventType) => el.removeEventListener(eventType, events[tag][eventType] as EventListenerOrEventListenerObject))
-            })
+        const events = (this.props.events ?? {}) as Events
+        Object.keys(events).forEach((eventName) => {
+            this._element?.addEventListener(eventName, events[eventName] as EventListenerOrEventListenerObject)
         })
+
+        this.removeSpecificEvents()
     }
 
-    getContent() {
-        return this.element;
+   removeSpecificEvents() { }
+
+    public getContent(): HTMLElement {
+        if (!this._element) {
+            throw new Error('Element is not created');
+        }
+        return this._element;
     }
 
     dispatchComponentDidMount() {
@@ -121,7 +132,7 @@ export abstract class Block<Props extends Record<string, unknown>>{
         return true
     }
 
-    setProps = (nextProps :Props)=> {
+    setProps = (nextProps: Props)=> {
         if (!nextProps) {
             return;
         }
@@ -133,28 +144,101 @@ export abstract class Block<Props extends Record<string, unknown>>{
         return this._element;
     }
 
+    private _getChildrenPropsAndProps(propsAndChildren: BasicBlockProps): {
+        children: Record<string, ChildProps>,
+        props: BasicBlockProps,
+        lists: Record<string, Block<BasicBlockProps>[]>
+    } {
+        const children: Record<string, ChildProps> = {};
+        const props: BasicBlockProps = {};
+        const lists: Record<string, Block<BasicBlockProps>[]> = {};
+
+        Object.entries(propsAndChildren).forEach(([key, value]) => {
+            if (value instanceof Block) {
+                children[key] = value;
+            } else if (Array.isArray(value)) {
+                lists[key] = value;
+            } else {
+                props[key] = value;
+            }
+        });
+
+        return { children, props, lists };
+    }
+
+    
+
     _render() {
-        const block = this.render();
+        const propsAndStubs: Record<string, unknown> = { ...this.props };
+        const _tmpId = Math.floor(100000 + Math.random() * 900000);
 
-        if (this._element && block) {
-            this._element.appendChild(block)
-        }     
+        Object.entries(this.children).forEach(([key, child]) => {
+            propsAndStubs[key] = `<div data-id="${child.props._id}"></div>`;
+        });
+
+        Object.entries(this.lists).forEach(([key]) => {
+            propsAndStubs[key] = `<div data-id="__l_${_tmpId}"></div>`;
+        });
+
+        const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
+        const template = Handlebars.compile(this.render())
+        fragment.innerHTML = template(propsAndStubs);
+
+        Object.values(this.children).forEach(child => {
+            const stub = fragment.content.querySelector(`[data-id="${child.props._id}"]`);
+            if (stub) {
+                stub.replaceWith(child.getContent());
+            }
+        });
+
+        Object.entries(this.lists).forEach(([, child]) => {
+            const listCont = this._createDocumentElement('template') as HTMLTemplateElement;
+
+            child.forEach(item => {
+                if (item instanceof Block) {
+                    listCont.content.append(item.getContent());
+                } else {
+                    listCont.content.append(`${item}`);
+                }
+            });
+
+            const stub = fragment.content.querySelector(`[data-id="__l_${_tmpId}"]`);
+
+            if (stub) {
+                stub.replaceWith(listCont.content);
+            }
+        });
+
+        const newElement = fragment.content.firstElementChild as HTMLElement;
+
+        if (this._element && newElement) {
+            this._element.replaceWith(newElement);
+        }
+
+        this._element = newElement;
+        this._addEvents();
+    
+        // const block = this.render();
+
+        // if (this._element && block) {
+        //     this._element.appendChild(block)
+        // }     
     }
 
-    render(): Node | null {
-        return null
+    render(): string {
+        return ''
     }
 
-    _makePropsProxy(props:Props) {
+    _makePropsProxy(props: BasicBlockProps) {
         const self = this
 
         return new Proxy(props, {
             get(target, prop) {
-                const value = target[prop as keyof Props];
+                const value = target[prop as keyof BasicBlockProps];
                 return typeof value === "function" ? value.bind(target) : value;
             },
             set(target, prop, value) {
-                target[prop as keyof Props] = value;
+                target[prop as keyof BasicBlockProps] = value;
 
                 self.eventBus().emit(Block.EVENTS.UPDATE, JSON.parse(JSON.stringify(target)), target);
                 return true;
