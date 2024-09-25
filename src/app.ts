@@ -4,9 +4,9 @@ import './pages/error/error.pcss';
 
 import { SidePanel, ProfileInput, Avatar } from './components';
 import { profileData } from './mock';
-import { ErrorPage, loginPage } from './pages';
+import { ErrorPage, loginPage, registrationPage } from './pages';
 import { renderInDom } from './utils/helpers';
-import { LoginPageProps } from './pages/login/login';
+import { BasicBlockProps } from './components/common/block';
 
 Handlebars.registerPartial('SidePanel', SidePanel);
 Handlebars.registerPartial('ProfileInput', ProfileInput);
@@ -48,7 +48,7 @@ export default class App {
 
             switch (this.currentPage) {
                 case Page.login: {
-                    renderInDom<LoginPageProps>(".app", loginPage);
+                    renderInDom<BasicBlockProps>(".app", loginPage);
 
                     break;
                 }
@@ -75,8 +75,7 @@ export default class App {
                     break;
                 }
                 case Page.registration: {
-                    const template = Handlebars.compile(Pages.RegistrationPage);
-                    this.appElement.innerHTML = template({})
+                    renderInDom<BasicBlockProps>(".app", registrationPage);
                     break;
                 }
                 case Page.chat: {

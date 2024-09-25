@@ -1,4 +1,4 @@
-import { Block } from "../../components/common/block";
+import { BasicBlockProps, Block } from "../../components/common/block";
 import LoginPageTemplate from './login.hbs?raw';
 import { Button, FormInput, Link } from '../../components';
 import { validateLogin, validatePassword } from "../../utils/validation";
@@ -13,14 +13,7 @@ type LoginPageForm = {
     [FormInputs.FormInputPassword]: string
 }
 
-export interface LoginPageProps extends Record<string, unknown> {
-    state: {
-        values: LoginPageForm
-        errors: LoginPageForm
-    },
-}
-
-class LoginPage extends Block<LoginPageProps> {
+class LoginPage extends Block<BasicBlockProps> {
     formValues: LoginPageForm = {
         [FormInputs.FormInputLogin]: '',
         [FormInputs.FormInputPassword]: ''
