@@ -1,9 +1,11 @@
 @import './../../styles/mixins.pcss';
 
 .profile-field {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .input_block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
     .label {
         color: var(--text-color);
@@ -18,6 +20,11 @@
         padding: 7px 0;
         color: var(--caption-color);
         @mixin text-font 13px;
+    }
+
+    .error {
+        text-align: right;
+        color: var(--error-color)
     }
 }
 

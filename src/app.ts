@@ -3,7 +3,7 @@ import * as Pages from './pages';
 import './pages/error/error.pcss';
 
 import { profileData } from './mock';
-import { ErrorPage, loginPage, registrationPage } from './pages';
+import { ErrorPage, ErrorPageProps, loginPage, ProfilePage, ProfilePageProps, registrationPage } from './pages';
 import { renderInDom } from './utils/helpers';
 import { BasicBlockProps } from './components/common/block';
 
@@ -52,10 +52,10 @@ export default class App {
                     const page = new ErrorPage({
                         title: '404',
                         subTitle: 'Не туда попали'
-                    }).element
+                    })
 
                     if (page) {
-                        this.appElement.appendChild(page)
+                        renderInDom<ErrorPageProps>(".app", page);
                     }
                     break;
                 }
@@ -63,10 +63,10 @@ export default class App {
                     const page = new ErrorPage({
                         title: '500',
                         subTitle: 'Мы уже фиксим'
-                    }).element
+                    })
 
                     if (page) {
-                        this.appElement.appendChild(page)
+                        renderInDom<ErrorPageProps>(".app", page);
                     }
                     break;
                 }
@@ -80,28 +80,30 @@ export default class App {
                     break;
                 }
                 case Page.profile: {
-                    const template = Handlebars.compile(Pages.ProfilePage);
-                    this.appElement.innerHTML = template({
+                    const page = new ProfilePage({
                         profileData,
-                        disabled: 'disabled',
+                        pageMode: 'basic'
                     })
+
+                    renderInDom<ProfilePageProps>(".app", page);
                     break;
                 }
                 case Page.profileEdit: {
-                    const template = Handlebars.compile(Pages.ProfilePage);
-                    this.appElement.innerHTML = template({
+                    const page = new ProfilePage({
                         profileData,
-                        isWithSaveButton: true,
+                        pageMode: 'edit'
                     })
+
+                    renderInDom<ProfilePageProps>(".app", page);
                     break;
                 }
                 case Page.profilePassword: {
-                    const template = Handlebars.compile(Pages.ProfilePage);
-                    this.appElement.innerHTML = template({
+                    const page = new ProfilePage({
                         profileData,
-                        isWithSaveButton: true,
-                        isChangePasswordMode: true
+                        pageMode: 'changePassword'
                     })
+
+                    renderInDom<ProfilePageProps>(".app", page);
                     break;
                 }
             }

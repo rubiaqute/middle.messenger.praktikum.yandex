@@ -1,2 +1,3 @@
 import './profile.pcss'
-export { default as ProfilePage } from './profile.hbs?raw';
+export { ProfilePage } from './profile';
+export type { ProfilePageProps } from './profile';

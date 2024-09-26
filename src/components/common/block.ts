@@ -110,9 +110,7 @@ export abstract class Block<Props extends BasicBlockProps>{
         this.componentDidMount()
     }
     
-    componentDidMount () {
-        this._addEvents()
-    }
+    componentDidMount () {}
 
     _componentDidUpdate(oldProps: Props, newProps: Props) {
         const response = this.componentDidUpdate(oldProps, newProps);
@@ -217,12 +215,6 @@ export abstract class Block<Props extends BasicBlockProps>{
 
         this._element = newElement;
         this._addEvents();
-    
-        // const block = this.render();
-
-        // if (this._element && block) {
-        //     this._element.appendChild(block)
-        // }     
     }
 
     render(): string {

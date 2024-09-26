@@ -56,18 +56,9 @@ const inputsLDataList = [
         label: 'Пароль (еще раз)',
         type: 'password'
     },
-
 ]
 
-type RegistrationPageForm = {
-    [FormInputs.FormInputLogin]: string,
-    [FormInputs.FormInputPassword]: string,
-    [FormInputs.FormInputEmail] : string,
-    [FormInputs.FormInputFirstName]: string,
-    [FormInputs.FormInputSecondName]: string,
-    [FormInputs.FormInputPhone]: string,
-    [FormInputs.FormInputRepeatPassword]: string,
-}
+type RegistrationPageForm = Record<FormInputs, string>
 
 class RegistrationPage extends Block<BasicBlockProps> {
     formValues: RegistrationPageForm = {

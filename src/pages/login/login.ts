@@ -8,10 +8,7 @@ enum FormInputs {
     FormInputPassword = 'FormInputPassword'
 }
 
-type LoginPageForm = {
-    [FormInputs.FormInputLogin]: string,
-    [FormInputs.FormInputPassword]: string
-}
+type LoginPageForm = Record<FormInputs, string>
 
 class LoginPage extends Block<BasicBlockProps> {
     formValues: LoginPageForm = {

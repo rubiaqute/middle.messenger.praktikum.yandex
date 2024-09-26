@@ -2,7 +2,7 @@ import { Block } from "../../components/common/block";
 import ErrorPageTemplate from './error.hbs?raw';
 import { Link } from '../../components';
 
-interface ErrorPageProps extends Record<string, unknown>  {
+export interface ErrorPageProps extends Record<string, unknown>  {
     title: string,
     subTitle: string,
 }
