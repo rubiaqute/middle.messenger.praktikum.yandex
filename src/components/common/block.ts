@@ -154,7 +154,7 @@ export abstract class Block<Props extends BasicBlockProps>{
         Object.entries(propsAndChildren).forEach(([key, value]) => {
             if (value instanceof Block) {
                 children[key] = value;
-            } else if (Array.isArray(value)) {
+            } else if (Array.isArray(value) && value.every((item)=> item instanceof Block)) {
                 lists[key] = value;
             } else {
                 props[key] = value;

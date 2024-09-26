@@ -1,9 +1,7 @@
-import Handlebars from 'handlebars';
-import * as Pages from './pages';
 import './pages/error/error.pcss';
 
 import { profileData } from './mock';
-import { ErrorPage, ErrorPageProps, loginPage, ProfilePage, ProfilePageProps, registrationPage } from './pages';
+import { chatPage, ErrorPage, ErrorPageProps, loginPage, ProfilePage, ProfilePageProps, registrationPage } from './pages';
 import { renderInDom } from './utils/helpers';
 import { BasicBlockProps } from './components/common/block';
 
@@ -45,7 +43,6 @@ export default class App {
             switch (this.currentPage) {
                 case Page.login: {
                     renderInDom<BasicBlockProps>(".app", loginPage);
-
                     break;
                 }
                 case Page.notFoundError: {
@@ -75,8 +72,7 @@ export default class App {
                     break;
                 }
                 case Page.chat: {
-                    const template = Handlebars.compile(Pages.ChatPage);
-                    this.appElement.innerHTML = template({})
+                    renderInDom<BasicBlockProps>(".app", chatPage);
                     break;
                 }
                 case Page.profile: {

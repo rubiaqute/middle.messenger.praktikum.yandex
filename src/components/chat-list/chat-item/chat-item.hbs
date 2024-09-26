@@ -1,0 +1,8 @@
+<div>
+    <div class="label">{{name}}</div>
+    {{#if lastMessage.isSelf}}
+        <span>Вы:</span>
+    {{/if}}
+    <div class="label">{{lastMessage.text}}</div>
+    <div class="label">{{lastMessage.time}}</div>
+</div>

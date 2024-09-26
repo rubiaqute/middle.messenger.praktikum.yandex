@@ -9,6 +9,7 @@ const ERRORS = {
     emailContent: 'Некорректная почта',
     phoneContent: 'Некорректный номер телефона'
 }
+
 export const validateLogin = (login: string)=> {
     if (!login) {
         return ERRORS.requiredField

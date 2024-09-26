@@ -4,4 +4,5 @@ export type { ErrorPageProps } from './error';
 export { registrationPage } from './registartion';
 export { ProfilePage } from './profile';
 export type { ProfilePageProps } from './profile';
-export { ChatPage } from './chat';
+export { chatPage } from './chat';
+export type { IChatItem, IMessage } from './chat';

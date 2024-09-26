@@ -1,3 +1,4 @@
+import { IChatItem } from "./pages";
 import { ProfileData } from "./pages/profile/utils";
 
 export const profileData: ProfileData = {
@@ -9,3 +10,96 @@ export const profileData: ProfileData = {
     displayName: 'Ваня',
     password: 'very_good_Password7'
 }
+
+export const chatList: IChatItem[] = [
+    {
+        id: 1,
+        chatName: 'Вадим',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-27 18:00:00',
+                text: `Во глубине сибирских руд
+                Храните гордое терпенье,`
+            },
+            {
+                isSelf: false,
+                time: '2024-09-27 18:23:00',
+                text: `Не пропадет ваш скорбный труд
+                И дум высокое стремленье.`
+            }
+        ]
+    },
+    {
+        id: 2,
+        chatName: 'Даша',
+        messages: [
+            {
+                isSelf: false,
+                time: '2024-09-26 18:00:00',
+                text: `Несчастью верная сестра,
+                Надежда в мрачном подземелье`
+            },
+        ]
+    },
+    {
+        id: 3,
+        chatName: 'Артем',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-25 18:00:00',
+                text: `Разбудит бодрость и веселье,
+                Придет желанная пора:`
+            },
+        ]
+    },
+    {
+        id: 4,
+        chatName: '1,2,3',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-25 17:00:00',
+                text: `Любовь и дружество до вас
+                Дойдут сквозь мрачные затворы,`
+            },
+        ]
+    },
+    {
+        id: 5,
+        chatName: 'Слава',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-24 18:00:00',
+                text: `Как в ваши каторжные норы
+                Доходит мой свободный глас.`
+            },
+        ]
+    },
+    {
+        id: 6,
+        chatName: 'Магазин',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-23 18:00:00',
+                text: `Оковы тяжкие падут,
+                Темницы рухнут — и свобода`
+            },
+        ]
+    },
+    {
+        id: 7,
+        chatName: 'Киноклуб',
+        messages: [
+            {
+                isSelf: true,
+                time: '2024-09-22 18:00:00',
+                text: `Вас примет радостно у входа,
+                И братья меч вам отдадут.`
+            },
+        ]
+    },
+]

@@ -1,1 +1,2 @@
-export { default as ChatPage } from './chat.hbs?raw';
+export { chatPage } from './chat';
+export type { IChatItem, IMessage } from './utils'
