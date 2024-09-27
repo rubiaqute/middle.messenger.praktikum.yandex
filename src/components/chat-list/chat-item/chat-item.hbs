@@ -1,8 +1,22 @@
-<div>
-    <div class="label">{{name}}</div>
-    {{#if lastMessage.isSelf}}
-        <span>Вы:</span>
-    {{/if}}
-    <div class="label">{{lastMessage.text}}</div>
-    <div class="label">{{lastMessage.time}}</div>
+<div class="chat-item">
+    <div class="avatar-wrapper"></div>
+
+    <div class="info-block">
+        <div class="name">{{name}}</div>
+        <div class="time">{{lastMessage.time}}</div>
+        <div class="message">
+            {{#if lastMessage.isSelf}}
+                <b>Вы:</b>
+            {{/if}}
+            {{lastMessage.text}}
+        </div>
+        <div class="counter-wrapper">
+            {{#if unreadCount}}
+            <div class="counter">
+                {{unreadCount}}
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    
 </div>

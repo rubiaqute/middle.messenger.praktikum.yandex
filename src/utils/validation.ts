@@ -80,3 +80,11 @@ export const validatePhone = (phone: string) => {
 
     return ''
 }
+
+export const validateMessage = (message: string) => {
+    if (!message.trim()) {
+        return ERRORS.requiredField
+    }
+
+    return ''
+}

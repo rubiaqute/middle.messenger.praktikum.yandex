@@ -115,9 +115,9 @@ export class ProfilePage extends Block<ProfilePageProps> {
             }
         }
 
-        this.children[childKey].setProps({
-            ...this.children[childKey].props,
-            _id: this.children[childKey].props._id as string,
+        this.childrenNodes[childKey].setProps({
+            ...this.childrenNodes[childKey].props,
+            _id: this.childrenNodes[childKey].props._id as string,
             error,
             value: this.props.pageMode === 'changePassword' ? this.changePasswordFormValues[childKey as keyof ChangePasswodProfileForm] : this.editFormValues[childKey as keyof EditProfileForm]
         })
@@ -147,9 +147,9 @@ export class ProfilePage extends Block<ProfilePageProps> {
         }
 
         Object.keys(this.props.pageMode === 'changePassword' ? this.changePasswordFormValues : this.editFormValues).forEach((key) => {
-            this.children[key].setProps({
-                ...this.children[key].props,
-                _id: this.children[key].props._id as string,
+            this.childrenNodes[key].setProps({
+                ...this.childrenNodes[key].props,
+                _id: this.childrenNodes[key].props._id as string,
                 error: errors[key as keyof (EditProfileForm | ChangePasswodProfileForm)],
                 value: this.props.pageMode === 'changePassword' 
                     ? this.changePasswordFormValues[key as keyof ChangePasswodProfileForm] 

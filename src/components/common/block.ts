@@ -6,7 +6,7 @@ export interface Events {
 }
 
 export type BasicBlockProps = Record<string, unknown>
-export type ChildProps = Block<{ _id: string, [key: string]: string }>
+export type ChildProps = Block<{ _id: string, [key: string]: unknown }>
 
 export abstract class Block<Props extends BasicBlockProps>{
     static EVENTS = {
@@ -16,7 +16,7 @@ export abstract class Block<Props extends BasicBlockProps>{
         UPDATE: "flow:component-did-update",
     };
 
-    children: Record<string, ChildProps> = {}
+    private children: Record<string, ChildProps> = {}
     private lists: Record<string, Block<BasicBlockProps>[]> = {};
 
     _element: HTMLElement | null = null;
@@ -89,6 +89,10 @@ export abstract class Block<Props extends BasicBlockProps>{
         this.eventBus().emit(Block.EVENTS.FLOW_CDM);
     }
 
+    updateLists(key: string, newList: Block<BasicBlockProps>[]) {
+        this.lists[key] = newList
+    }
+
     getEvents(): Events {
         return {}
     }
@@ -140,6 +144,10 @@ export abstract class Block<Props extends BasicBlockProps>{
 
     get element() {
         return this._element;
+    }
+
+    get childrenNodes() {
+        return this.children;
     }
 
     private _getChildrenPropsAndProps(propsAndChildren: BasicBlockProps): {
@@ -232,7 +240,7 @@ export abstract class Block<Props extends BasicBlockProps>{
             set(target, prop, value) {
                 target[prop as keyof BasicBlockProps] = value;
 
-                self.eventBus().emit(Block.EVENTS.UPDATE, JSON.parse(JSON.stringify(target)), target);
+                self.eventBus().emit(Block.EVENTS.UPDATE, target, target);
                 return true;
             },
             deleteProperty() {

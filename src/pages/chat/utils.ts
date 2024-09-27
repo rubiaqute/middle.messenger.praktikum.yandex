@@ -8,4 +8,5 @@ export interface IChatItem {
     id: number,
     chatName: string,
     messages: IMessage[]
+    unreadCount: number,
 }

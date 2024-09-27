@@ -15,12 +15,14 @@ export const chatList: IChatItem[] = [
     {
         id: 1,
         chatName: 'Вадим',
+        unreadCount: 2,
         messages: [
             {
                 isSelf: true,
                 time: '2024-09-27 18:00:00',
                 text: `Во глубине сибирских руд
-                Храните гордое терпенье,`
+                Храните гордое терпенье,Не пропадет ваш скорбный труд
+                И дум высокое стремленье.`
             },
             {
                 isSelf: false,
@@ -33,6 +35,7 @@ export const chatList: IChatItem[] = [
     {
         id: 2,
         chatName: 'Даша',
+        unreadCount: 0,
         messages: [
             {
                 isSelf: false,
@@ -45,6 +48,7 @@ export const chatList: IChatItem[] = [
     {
         id: 3,
         chatName: 'Артем',
+        unreadCount: 0,
         messages: [
             {
                 isSelf: true,
@@ -57,6 +61,7 @@ export const chatList: IChatItem[] = [
     {
         id: 4,
         chatName: '1,2,3',
+        unreadCount: 1,
         messages: [
             {
                 isSelf: true,
@@ -69,9 +74,10 @@ export const chatList: IChatItem[] = [
     {
         id: 5,
         chatName: 'Слава',
+        unreadCount: 1,
         messages: [
             {
-                isSelf: true,
+                isSelf: false,
                 time: '2024-09-24 18:00:00',
                 text: `Как в ваши каторжные норы
                 Доходит мой свободный глас.`
@@ -81,9 +87,10 @@ export const chatList: IChatItem[] = [
     {
         id: 6,
         chatName: 'Магазин',
+        unreadCount: 0,
         messages: [
             {
-                isSelf: true,
+                isSelf: false,
                 time: '2024-09-23 18:00:00',
                 text: `Оковы тяжкие падут,
                 Темницы рухнут — и свобода`
@@ -93,6 +100,7 @@ export const chatList: IChatItem[] = [
     {
         id: 7,
         chatName: 'Киноклуб',
+        unreadCount: 0,
         messages: [
             {
                 isSelf: true,

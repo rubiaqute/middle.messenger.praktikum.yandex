@@ -1,62 +1,9 @@
 import { BasicBlockProps, Block } from "../../components/common/block";
-import RegistartionTamplate from './registration.hbs?raw';
+import RegistrationTemplate from './registration.hbs?raw';
 import { Button, FormInput, Link } from '../../components';
 import { validateEmail, validateLogin, validateName, validatePassword, validatePhone, validateRepeatPassword } from "../../utils/validation";
+import { FormInputs, inputsLDataList } from "./utils";
 
-enum FormInputs {
-    FormInputEmail = 'FormInputEmail',
-    FormInputLogin = 'FormInputLogin',
-    FormInputFirstName = 'FormInputFirstName',
-    FormInputSecondName = 'FormInputSecondName',
-    FormInputPhone = 'FormInputPhone',
-    FormInputPassword = 'FormInputPassword',
-    FormInputRepeatPassword = 'FormInputRepeatPassword'
-}
-
-const inputsLDataList = [
-    {
-        id: FormInputs.FormInputLogin,
-        name: 'login',
-        label: 'Логин',
-        type: 'text'
-    },
-    {
-        id: FormInputs.FormInputPassword,
-        name: 'password',
-        label: 'Пароль',
-        type: 'password'
-    },
-    {
-        id: FormInputs.FormInputEmail,
-        name: 'email',
-        label: 'Почта',
-        type: 'email'
-    },
-    {
-        id: FormInputs.FormInputFirstName,
-        name: 'first_name',
-        label: 'Имя',
-        type: 'text'
-    },
-    {
-        id: FormInputs.FormInputSecondName,
-        name: 'second_name',
-        label: 'Фамилия',
-        type: 'text'
-    },
-    {
-        id: FormInputs.FormInputPhone,
-        name: 'phone',
-        label: 'Телефон',
-        type: 'text'
-    },
-    {
-        id: FormInputs.FormInputRepeatPassword,
-        name: 'repeat_password',
-        label: 'Пароль (еще раз)',
-        type: 'password'
-    },
-]
 
 type RegistrationPageForm = Record<FormInputs, string>
 
@@ -141,9 +88,9 @@ class RegistrationPage extends Block<BasicBlockProps> {
 
         }
 
-        this.children[childKey].setProps({
-            ...this.children[childKey].props,
-            _id: this.children[childKey].props._id as string,
+        this.childrenNodes[childKey].setProps({
+            ...this.childrenNodes[childKey].props,
+            _id: this.childrenNodes[childKey].props._id as string,
             error,
             value: this.formValues[childKey]
         })
@@ -168,9 +115,9 @@ class RegistrationPage extends Block<BasicBlockProps> {
         }
 
         Object.values(FormInputs).forEach((input) => {
-            this.children[input].setProps({
-                ...this.children[input].props,
-                _id: this.children[input].props._id as string,
+            this.childrenNodes[input].setProps({
+                ...this.childrenNodes[input].props,
+                _id: this.childrenNodes[input].props._id as string,
                 error: errors[input],
                 value: this.formValues[input]
             })
@@ -184,7 +131,7 @@ class RegistrationPage extends Block<BasicBlockProps> {
     }
 
     render() {
-        return RegistartionTamplate
+        return RegistrationTemplate
     }
 }
 

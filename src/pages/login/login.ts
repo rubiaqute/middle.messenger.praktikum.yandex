@@ -64,9 +64,9 @@ class LoginPage extends Block<BasicBlockProps> {
         const value = (e.target as HTMLInputElement)?.value  ?? ''
         const error = childKey === FormInputs.FormInputLogin ? validateLogin(value) : validatePassword(value)
 
-        this.children[childKey].setProps({
-            ...this.children[childKey].props,
-            _id: this.children[childKey].props._id as string,
+        this.childrenNodes[childKey].setProps({
+            ...this.childrenNodes[childKey].props,
+            _id: this.childrenNodes[childKey].props._id as string,
             error,
             value: this.formValues[childKey]
         })
@@ -86,9 +86,9 @@ class LoginPage extends Block<BasicBlockProps> {
         }
 
         Object.values(FormInputs).forEach((input)=>{
-            this.children[input].setProps({
-                ...this.children[input].props,
-                _id: this.children[input].props._id as string,
+            this.childrenNodes[input].setProps({
+                ...this.childrenNodes[input].props,
+                _id: this.childrenNodes[input].props._id as string,
                 error: errors[input],
                 value: this.formValues[input]
             })
