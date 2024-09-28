@@ -19,6 +19,7 @@ export class ChatBody extends Block<ChatBodyProps> {
       MessageInput: new MessageInput({
         _id: "MessageInput",
         value: "",
+        error: '',
         whenSend: (e: Event) => this.sendMessage(e),
         events: {
           change: (e: Event) => this.changeMessage(e),
@@ -36,12 +37,12 @@ export class ChatBody extends Block<ChatBodyProps> {
 
   updateChatBody(newChat: IChatItem) {
     const newMessagesNodes = newChat.messages.map(
-      (messageItem, index) =>
-        new MessageItem({
-          _id: `MessageItem${index}`,
-          message: messageItem,
-        }),
-    ) as Block<BasicBlockProps>[];
+      (messageItem, index) => new MessageItem({
+        _id: `MessageItem${index}`,
+        message: messageItem,
+        error: '',
+      })
+    ) as unknown as Block<BasicBlockProps>[]
 
     this.updateLists("MessageList", newMessagesNodes);
 

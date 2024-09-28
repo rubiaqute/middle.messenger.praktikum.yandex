@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
-
 type EventBusCallBack = (...args: unknown[]) => unknown
+
 export class EventBus {
   listeners: Record<string, EventBusCallBack[]>;
 

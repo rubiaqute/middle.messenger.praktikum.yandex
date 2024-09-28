@@ -53,7 +53,7 @@ class RegistrationPage extends Block<BasicBlockProps> {
       Button: new Button({
         _id: "Button",
         text: "Зарегистрироваться",
-        id: "registration",
+        buttonId: "registration",
         events: {
           click: (e: Event) => this.submitForm(e),
         },

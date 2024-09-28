@@ -2,11 +2,15 @@ import { EventBus } from "../../utils/event-bus";
 import Handlebars from "handlebars";
 
 export interface Events {
-  [eventName: string]: (...args: unknown[]) => unknown;
+  [eventName: string]: (...args: never) => unknown;
 }
 
 export type BasicBlockProps = Record<string, unknown>;
-export type ChildProps = Block<{ _id: string; [key: string]: unknown }>;
+
+type ChildProps = BasicBlockProps & {
+  _id: string
+}
+type Children = Block<ChildProps>
 
 export abstract class Block<Props extends BasicBlockProps> {
   static EVENTS = {
@@ -16,7 +20,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     UPDATE: "flow:component-did-update",
   };
 
-  private children: Record<string, ChildProps> = {};
+  private children: Record<string, Children> = {};
   private lists: Record<string, Block<BasicBlockProps>[]> = {};
 
   private _element: HTMLElement | null = null;
@@ -24,12 +28,11 @@ export abstract class Block<Props extends BasicBlockProps> {
     tagName: string;
     props: BasicBlockProps;
   }> | null = null;
-  public props: BasicBlockProps;
+  public props: Props;
   eventBus: () => EventBus;
 
-  constructor(propsWithChildren: BasicBlockProps, tagName = "div") {
-    const { props, children, lists } =
-      this._getChildrenPropsAndProps(propsWithChildren);
+  constructor(propsWithChildren: Props, tagName = "div") {
+    const { props, children, lists } = this._getChildrenPropsAndProps(propsWithChildren);
     this.props = this._makePropsProxy(props);
     this.children = children;
     this.lists = lists;
@@ -39,8 +42,6 @@ export abstract class Block<Props extends BasicBlockProps> {
       tagName,
       props: propsWithChildren,
     };
-
-    this.props = this._makePropsProxy(props);
 
     this.eventBus = () => eventBus;
 
@@ -119,8 +120,8 @@ export abstract class Block<Props extends BasicBlockProps> {
 
   private _componentDidUpdate() {
     if (this.element) {
-      this.element.innerHTML = "";
       this._removeEvents();
+      this.element.innerHTML = "";
     }
 
     this._render();
@@ -143,13 +144,13 @@ export abstract class Block<Props extends BasicBlockProps> {
     return this.children;
   }
 
-  private _getChildrenPropsAndProps(propsAndChildren: BasicBlockProps): {
-    children: Record<string, ChildProps>;
-    props: BasicBlockProps;
+  private _getChildrenPropsAndProps(propsAndChildren: Props): {
+    children: Record<string, Children>;
+    props: Props;
     lists: Record<string, Block<BasicBlockProps>[]>;
   } {
-    const children: Record<string, ChildProps> = {};
-    const props: BasicBlockProps = {};
+    const children: Record<string, Children> = {};
+    const props: BasicBlockProps = {}
     const lists: Record<string, Block<BasicBlockProps>[]> = {};
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
@@ -165,7 +166,7 @@ export abstract class Block<Props extends BasicBlockProps> {
       }
     });
 
-    return { children, props, lists };
+    return { children, props: props as Props, lists };
   }
 
   private _render() {
@@ -229,7 +230,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     return "";
   }
 
-  private _makePropsProxy(props: BasicBlockProps) {
+  private _makePropsProxy(props: Props) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
@@ -239,7 +240,7 @@ export abstract class Block<Props extends BasicBlockProps> {
         return typeof value === "function" ? value.bind(target) : value;
       },
       set(target, prop, value) {
-        target[prop as keyof BasicBlockProps] = value;
+        target[prop as keyof Props] = value;
 
         self.eventBus().emit(Block.EVENTS.UPDATE, target, target);
         return true;

@@ -69,7 +69,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
       Button: new Button({
         _id: "Button",
         text: "Сохранить",
-        id: "saveButton",
+        buttonId: "saveButton",
         events: {
           click: (e: Event) => this.submitForm(e),
         },

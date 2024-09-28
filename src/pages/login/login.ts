@@ -51,7 +51,7 @@ class LoginPage extends Block<BasicBlockProps> {
       Button: new Button({
         _id: "Button",
         text: "Авторизоваться",
-        id: "login",
+        buttonId: "login",
         events: {
           click: (e: Event) => this.submitForm(e),
         },

@@ -6,7 +6,7 @@ interface MessageInputProps extends Record<string, unknown> {
   value: string;
   error: string;
   events: Events;
-  whenSend: () => void;
+  whenSend: (e: Event) => void;
   _id: string;
 }
 

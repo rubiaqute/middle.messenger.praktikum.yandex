@@ -19,6 +19,10 @@
 
 - Приложение будет запущено на `http://localhost:3000`
 
+## Запуск проверки линтера
+
+`npm run lint`
+
 ## Страницы
 
 Приложение - `https://rubiaqute-messenger.netlify.app`

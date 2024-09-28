@@ -12,7 +12,7 @@
     "build": "npm run prebuild && vite build",
     "start": "npm run prebuild && vite build && node server.cjs",
     "preview": "vite preview",
-    "lint": "eslint && npx stylelint \"**/*.pcss\""
+    "lint": "eslint && npx stylelint \"**/*.pcss\" && tsc --noEmit"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
