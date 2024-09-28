@@ -1,2 +1,2 @@
-import './login.pcss';
-export { loginPage } from './login';
+import "./login.pcss";
+export { loginPage } from "./login";

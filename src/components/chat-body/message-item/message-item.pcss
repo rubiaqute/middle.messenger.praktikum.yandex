@@ -1,21 +1,23 @@
-@import './../../../styles/mixins.pcss';
+@import url("./../../../styles/mixins.pcss");
 
 .message {
-    padding: 12px;
-    max-width: 400px;
-    background-color: #F8F8F8;
-    color: var(--text-color);
-    border-radius: 15px;
-    margin-bottom: 10px;
+  padding: 12px;
+  max-width: 400px;
+  background-color: #f8f8f8;
+  color: var(--text-color);
+  border-radius: 15px;
+  margin-bottom: 10px;
 
-    &.self {
-        margin-left: auto;
-        background-color: var(--secondary-color);
-    }
-    .time {
-        margin-top: 8px;
-       text-align: right;
-        color: var(--caption-color);
-        @mixin text-font 11px;
-    }
+  &.self {
+    margin-left: auto;
+    background-color: var(--secondary-color);
+  }
+
+  .time {
+    margin-top: 8px;
+    text-align: right;
+    color: var(--caption-color);
+
+    @mixin text-font 11px;
+  }
 }

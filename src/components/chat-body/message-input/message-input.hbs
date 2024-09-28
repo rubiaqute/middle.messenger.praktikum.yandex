@@ -1,13 +1,23 @@
 <div>
-    <div class='message-input-group'>
-        <div class="button-wrapper">
-            <button class="button"><img src="./add.svg" alt="add-button"></button>
-        </div>
-        <input class="input" type="text" name="message" id="messageInput" placeholder="Сообщение" value="{{value}}"/>
-    
-        <div class="button-wrapper">
-            <button class="button send"><img src="./send.svg" alt="dend message button"></button>
-        </div>
+  <div class="message-input-group">
+    <div class="button-wrapper">
+      <button class="button"><img src="./add.svg" alt="add-button" /></button>
     </div>
-     {{#if error}} <span class="error">{{error}}</span>{{/if}}
+    <input
+      class="input"
+      type="text"
+      name="message"
+      id="messageInput"
+      placeholder="Сообщение"
+      value="{{value}}"
+    />
+
+    <div class="button-wrapper">
+      <button class="button send"><img
+          src="./send.svg"
+          alt="dend message button"
+        /></button>
+    </div>
+  </div>
+  {{#if error}} <span class="error">{{error}}</span>{{/if}}
 </div>

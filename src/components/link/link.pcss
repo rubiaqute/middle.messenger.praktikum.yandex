@@ -1,16 +1,17 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .link {
-    text-decoration: none;
-    color: var(--primary-color);
-    @mixin text-font 11px;
+  text-decoration: none;
+  color: var(--primary-color);
 
-    &:hover {
-        text-decoration: underline;
-        transition: 0.3s ease-in;
-    }
+  @mixin text-font 11px;
+
+  &:hover {
+    text-decoration: underline;
+    transition: 0.3s ease-in;
+  }
 }
 
 .link.alert {
-    color: var(--error-color);
+  color: var(--error-color);
 }

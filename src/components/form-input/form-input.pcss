@@ -1,28 +1,28 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .field {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    .label {
-        color: var(--caption-color);
-        @mixin text-font 9px;
-    }
+  .label {
+    color: var(--caption-color);
 
-    .input {
-        outline: none;
-        border: none;
-        background-color: var(--background-color);
-        border-bottom: 2px solid var(--primary-color);
-        padding: 7px 0;
-    }
+    @mixin text-font 9px;
+  }
 
-    .label:has(+ .input:placeholder-shown) {
-        display: none;
-    }
+  .input {
+    outline: none;
+    border: none;
+    background-color: var(--background-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding: 7px 0;
+  }
 
-    .error {
-        color: var(--error-color)
-    }
+  .label:has(+ .input:placeholder-shown) {
+    display: none;
+  }
 
+  .error {
+    color: var(--error-color);
+  }
 }

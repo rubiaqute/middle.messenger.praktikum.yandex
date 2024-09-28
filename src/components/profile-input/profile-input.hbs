@@ -1,7 +1,7 @@
 <div class="profile-field">
-    <div class="input_block">
+    <div class="input-block">
         <label class="label" for="{{name}}">{{label}}</label>
-        <input class="input" type="{{type}}" name="{{name}}" id="{{name}}" placeholder="{{label}}" value="{{value}}" required {{#if isDisabled}}disabled{{/if}}/>
+        <input class="input" type="{{type}}" name="{{name}}" id="{{name}}" placeholder="{{label}}" value="{{value}}" required {{#if isDisabled}} disabled {{/if}}/>
     </div>
     {{#if error}}
          <div class="error">{{error}}</div>

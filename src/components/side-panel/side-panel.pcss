@@ -1,25 +1,26 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .side-panel {
-    background-color: var(--secondary-background-color);
-    border-right: 1px solid #EAEAEA;
-    width: 64px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
+  background-color: var(--secondary-background-color);
+  border-right: 1px solid #eaeaea;
+  width: 64px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 
-    .button-wrapper {
-        width: 28px;
-        height: 28px;
-        margin: auto;
+  .button-wrapper {
+    width: 28px;
+    height: 28px;
+    margin: auto;
 
-        .back-button {
-            height: 100%;
-            border-radius: 50%;
-            @mixin button;
-            @mixin text-font 14px;
-        }
+    .back-button {
+      height: 100%;
+      border-radius: 50%;
+
+      @mixin button;
+      @mixin text-font 14px;
     }
+  }
 }

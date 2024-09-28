@@ -1,2 +1,2 @@
-import './form-input.pcss';
-export { FormInput } from './form-input';
+import "./form-input.pcss";
+export { FormInput } from "./form-input";

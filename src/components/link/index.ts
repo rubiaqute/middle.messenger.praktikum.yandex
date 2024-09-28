@@ -1,2 +1,2 @@
-import './link.pcss';
-export { Link } from './link';
+import "./link.pcss";
+export { Link } from "./link";

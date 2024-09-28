@@ -4,39 +4,36 @@
     {{{Avatar}}}
     <h1 class="name">{{profileData.firstName}}</h1>
 
-    <form  id="formProfile">
+    <form id="formProfile">
       <div class="fields-block">
 
-          {{#if isChangePasswordMode}}
-            {{{ProfileInputOldPassword}}}
-            {{{ProfileInputNewPassword}}}
-            {{{ProfileInputRepeatNewPassword}}}
-          {{else}}
-            {{{ProfileInputEmail}}}
-            {{{ProfileInputLogin}}}
-            {{{ProfileInputFirstName}}}
-            {{{ProfileInputSecondName}}}
-            {{{ProfileInputDisplayName}}}
-            {{{ProfileInputPhone}}}
-          {{/if}}
+        {{#if isChangePasswordMode}}
+          {{{ProfileInputOldPassword}}}
+          {{{ProfileInputNewPassword}}}
+          {{{ProfileInputRepeatNewPassword}}}
+        {{else}}
+          {{{ProfileInputEmail}}}
+          {{{ProfileInputLogin}}}
+          {{{ProfileInputFirstName}}}
+          {{{ProfileInputSecondName}}}
+          {{{ProfileInputDisplayName}}}
+          {{{ProfileInputPhone}}}
+        {{/if}}
 
       </div>
 
       {{#if isWithSaveButton}}
-          <div class="button-wrapper">{{{Button}}}</div>
+        <div class="button-wrapper">{{{Button}}}</div>
       {{else}}
-          <div class="links-block">
-            {{{LinkChangeData}}}
-            {{{LinkChangePassword}}}
-            {{{LinkExit}}}
-            {{!-- <div class="link-wrapper">{{> Link href="/profile-edit" text="Изменить данные" page="profile-edit"}}</div>
-            <div class="link-wrapper">{{> Link href="/profile-password" text="Изменить пароль" page="profile-password"}}</div>
-            <div class="link-wrapper">{{> Link href="/" text="Выйти" page="login" alert="alert"}}</div> --}}
-          </div>
+        <div class="links-block">
+          {{{LinkChangeData}}}
+          {{{LinkChangePassword}}}
+          {{{LinkExit}}}
+        </div>
       {{/if}}
-      
-  </form>
+
+    </form>
 
   </div>
-  
+
 </div>

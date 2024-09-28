@@ -1,21 +1,22 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .search-input-group {
-    display: grid;
-    gap: 8px;
-    grid-template-columns: 20px 1fr;
-    background-color: #EFEFEF;
-    align-items: center;
-    height: 32px;
-    padding: 8px;
-    border-radius: 15px;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 20px 1fr;
+  background-color: #efefef;
+  align-items: center;
+  height: 32px;
+  padding: 8px;
+  border-radius: 15px;
 
-     .input {
-        outline: none;
-        border: none;
-        text-align: left;
-        background-color: transparent;
-        color: var(--caption-color);
-        @mixin text-font 13px;
-    }
+  .input {
+    outline: none;
+    border: none;
+    text-align: left;
+    background-color: transparent;
+    color: var(--caption-color);
+
+    @mixin text-font 13px;
+  }
 }

@@ -1,70 +1,73 @@
-@import './../../../styles/mixins.pcss';
+@import url("./../../../styles/mixins.pcss");
 
 .chat-item {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px;
+  align-items: center;
+  border-bottom: 1px solid #efefef;
+  padding: 10px;
+  transition: ease-in-out 0.3s;
+  border-radius: 15px;
+
+  .avatar-wrapper {
+    margin: auto;
+    width: 37px;
+    height: 37px;
+    background-color: #efefef;
+    border-radius: 50%;
+  }
+
+  .info-block {
     display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 10px;
-    align-items: center;
-    border-bottom: 1px solid #EFEFEF;
-    padding: 10px;
-    transition: ease-in-out 0.3s;
-    border-radius: 15px;
+    grid-template: max-content 1fr / 230px 1fr;
 
-    .avatar-wrapper {
-        margin: auto;
-        width: 37px;
-        height: 37px;
-        background-color: #EFEFEF;
-        border-radius: 50%;
+    .name {
+      font-weight: 600;
+
+      @mixin text-font 13px;
+
+      margin-bottom: 12px;
     }
 
-    .info-block {
-        display: grid;
-        grid-template: max-content 1fr / 230px 1fr;
-
-        .name {
-            font-weight: 600;
-            @mixin text-font 13px;
-            margin-bottom: 12px;
-        }
-
-        .message {
-            width: 230px;
-            overflow: hidden;
-            white-space: nowrap;
-            max-height: 32px;
-            text-overflow: ellipsis;
-        }
-
-        .time {
-            text-align: center;
-        }
-
-        .counter-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center; 
-        }
-
-        .counter {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            display: flex;
-            justify-content: center; 
-            align-items: center; 
-            @mixin text-font 9px;
-        }
+    .message {
+      width: 230px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-height: 32px;
+      text-overflow: ellipsis;
     }
 
-    &:first-child {
-        border-top: 1px solid #EFEFEF;
+    .time {
+      text-align: center;
     }
-    
-    &:hover { 
-        cursor: pointer;
-        background-color: var(--secondary-color);
+
+    .counter-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
+    .counter {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @mixin text-font 9px;
+    }
+  }
+
+  &:first-child {
+    border-top: 1px solid #efefef;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--secondary-color);
+  }
 }
