@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import { EventBus } from "../../utils/event-bus";
 import Handlebars from "handlebars";
 
 export interface Events {
-  [eventName: string]: Function;
+  [eventName: string]: (...args: unknown[]) => unknown;
 }
 
 export type BasicBlockProps = Record<string, unknown>;
@@ -20,12 +19,12 @@ export abstract class Block<Props extends BasicBlockProps> {
   private children: Record<string, ChildProps> = {};
   private lists: Record<string, Block<BasicBlockProps>[]> = {};
 
-  _element: HTMLElement | null = null;
-  _meta: Partial<{
+  private _element: HTMLElement | null = null;
+  private _meta: Partial<{
     tagName: string;
     props: BasicBlockProps;
   }> | null = null;
-  props: BasicBlockProps;
+  public props: BasicBlockProps;
   eventBus: () => EventBus;
 
   constructor(propsWithChildren: BasicBlockProps, tagName = "div") {
@@ -49,14 +48,14 @@ export abstract class Block<Props extends BasicBlockProps> {
     eventBus.emit(Block.EVENTS.INIT);
   }
 
-  _registerEvents(eventBus: EventBus) {
+  private _registerEvents(eventBus: EventBus) {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     eventBus.on(Block.EVENTS.UPDATE, this._componentDidUpdate.bind(this));
   }
 
-  _addEvents() {
+  private _addEvents() {
     const events = (this.props.events ?? {}) as Events;
     Object.keys(events).forEach((eventName) => {
       this._element?.addEventListener(
@@ -68,9 +67,9 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.addSpecificEvents();
   }
 
-  addSpecificEvents() {}
+  public addSpecificEvents() {}
 
-  _removeEvents() {
+  private _removeEvents() {
     const events = (this.props.events ?? {}) as Events;
     Object.keys(events).forEach((eventName) => {
       this._element?.addEventListener(
@@ -82,7 +81,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.removeSpecificEvents();
   }
 
-  removeSpecificEvents() {}
+  public removeSpecificEvents() {}
 
   public getContent(): HTMLElement {
     if (!this._element) {
@@ -91,19 +90,15 @@ export abstract class Block<Props extends BasicBlockProps> {
     return this._element;
   }
 
-  dispatchComponentDidMount() {
+  public dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  updateLists(key: string, newList: Block<BasicBlockProps>[]) {
+  public updateLists(key: string, newList: Block<BasicBlockProps>[]) {
     this.lists[key] = newList;
   }
 
-  getEvents(): Events {
-    return {};
-  }
-
-  _createResources() {
+  private _createResources() {
     const tagName = this._meta?.tagName;
 
     if (tagName) {
@@ -111,18 +106,18 @@ export abstract class Block<Props extends BasicBlockProps> {
     }
   }
 
-  init() {
+  public init() {
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  _componentDidMount() {
+  private _componentDidMount() {
     this.componentDidMount();
   }
 
-  componentDidMount() {}
+  public componentDidMount() {}
 
-  _componentDidUpdate() {
+  private _componentDidUpdate() {
     if (this.element) {
       this.element.innerHTML = "";
       this._removeEvents();
@@ -132,7 +127,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.dispatchComponentDidMount();
   }
 
-  setProps = (nextProps: Props) => {
+  public setProps = (nextProps: Props) => {
     if (!nextProps) {
       return;
     }
@@ -173,9 +168,9 @@ export abstract class Block<Props extends BasicBlockProps> {
     return { children, props, lists };
   }
 
-  _render() {
+  private _render() {
     const propsAndStubs: Record<string, unknown> = { ...this.props };
-    const _tmpId = Math.floor(100000 + Math.random() * 900000);
+    const _tmpId = Math.floor(Math.random() * 100000);
 
     Object.entries(this.children).forEach(([key, child]) => {
       propsAndStubs[key] = `<div data-id="${child.props._id}"></div>`;
@@ -230,11 +225,11 @@ export abstract class Block<Props extends BasicBlockProps> {
     this._addEvents();
   }
 
-  render(): string {
+  public render(): string {
     return "";
   }
 
-  _makePropsProxy(props: BasicBlockProps) {
+  private _makePropsProxy(props: BasicBlockProps) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
@@ -255,17 +250,17 @@ export abstract class Block<Props extends BasicBlockProps> {
     });
   }
 
-  _createDocumentElement(tagName: string) {
+  private _createDocumentElement(tagName: string) {
     return document.createElement(tagName);
   }
 
-  show() {
+  public show() {
     if (this.element) {
       this.element.style.display = "block";
     }
   }
 
-  hide() {
+  public hide() {
     if (this.element) {
       this.element.style.display = "none";
     }

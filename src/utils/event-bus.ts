@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
+
+type EventBusCallBack = (...args: unknown[]) => unknown
 export class EventBus {
-  listeners: Record<string, Function[]>;
+  listeners: Record<string, EventBusCallBack[]>;
 
   constructor() {
     this.listeners = {};
   }
 
-  on(event: string, callback: Function) {
+  on(event: string, callback: EventBusCallBack) {
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
@@ -14,7 +16,7 @@ export class EventBus {
     this.listeners[event].push(callback);
   }
 
-  off(event: string, callback: Function) {
+  off(event: string, callback: EventBusCallBack) {
     if (!this.listeners[event]) {
       throw new Error(`Нет события: ${event}`);
     }

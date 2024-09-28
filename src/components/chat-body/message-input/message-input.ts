@@ -1,4 +1,5 @@
-import { Block, Events } from "../../common/block";
+import { Events } from "../../common/block";
+import { Input } from "../../common/input";
 import MessageInputTemplate from "./message-input.hbs?raw";
 
 interface MessageInputProps extends Record<string, unknown> {
@@ -9,20 +10,12 @@ interface MessageInputProps extends Record<string, unknown> {
   _id: string;
 }
 
-export class MessageInput extends Block<MessageInputProps> {
+export class MessageInput extends Input<MessageInputProps> {
   addSpecificEvents() {
-    const events = (this.props.events ?? {}) as Events;
-    Object.keys(events).forEach((eventName) => {
-      Array.from(
-        this._element?.getElementsByTagName("input") ?? [],
-      )[0].addEventListener(
-        eventName,
-        events[eventName] as EventListenerOrEventListenerObject,
-      );
-    });
+    super.addSpecificEvents()
 
     Array.from(
-      this._element?.getElementsByClassName("send") ?? [],
+      this.element?.getElementsByClassName("send") ?? [],
     )[0].addEventListener(
       "click",
       this.props.whenSend as EventListenerOrEventListenerObject,
@@ -30,18 +23,10 @@ export class MessageInput extends Block<MessageInputProps> {
   }
 
   removeSpecificEvents(): void {
-    const events = (this.props.events ?? {}) as Events;
-    Object.keys(events).forEach((eventName) => {
-      Array.from(
-        this._element?.getElementsByTagName("input") ?? [],
-      )[0]?.removeEventListener(
-        eventName,
-        events[eventName] as EventListenerOrEventListenerObject,
-      );
-    });
+    super.removeSpecificEvents()
 
     Array.from(
-      this._element?.getElementsByClassName("send") ?? [],
+      this.element?.getElementsByClassName("send") ?? [],
     )[0]?.removeEventListener(
       "click",
       this.props.whenSend as EventListenerOrEventListenerObject,
