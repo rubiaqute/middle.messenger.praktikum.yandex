@@ -5,16 +5,18 @@ enum METHODS {
     DELETE = 'DELETE'
 };
 
+type FetchData = Record<string, unknown>
+
 type FetchOptions = {
     method?: METHODS,
-    data?: Record<string, unknown>,
+    data?: FetchData,
     headers?: Record<string, string>
     timeout?: number
 }
 
 type FetchMethod = (url: string, options?: FetchOptions, timeout?: number) => Promise<unknown>
 
-function queryStringify(data: Record<string, unknown>) {
+function queryStringify(data: FetchData) {
     if (typeof data !== 'object') {
         throw new Error('Data must be object');
     }
