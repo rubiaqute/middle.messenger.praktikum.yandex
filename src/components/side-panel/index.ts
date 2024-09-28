@@ -1,2 +1,2 @@
-import './side-panel.pcss';
-export { default as SidePanel } from './side-panel.hbs?raw';
+import "./side-panel.pcss";
+export { SidePanel } from "./side-panel";

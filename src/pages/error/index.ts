@@ -1,2 +1,3 @@
-import './error.pcss';
-export { default as ErrorPage } from './error.hbs?raw';
+import "./error.pcss";
+export { ErrorPage } from "./error";
+export type { ErrorPageProps } from "./error";

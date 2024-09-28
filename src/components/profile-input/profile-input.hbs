@@ -1,4 +1,9 @@
 <div class="profile-field">
-    <label class="label" for="{{name}}">{{label}}</label>
-    <input class="input" type="{{type}}" name="{{name}}" id="{{name}}" placeholder="{{label}}" value="{{value}}" required {{disabled}}/>
+    <div class="input-block">
+        <label class="label" for="{{name}}">{{label}}</label>
+        <input class="input" type="{{type}}" name="{{name}}" id="{{name}}" placeholder="{{label}}" value="{{value}}" required {{#if isDisabled}} disabled {{/if}}/>
+    </div>
+    {{#if error}}
+         <div class="error">{{error}}</div>
+    {{/if}}
 </div>

@@ -1,18 +1,22 @@
-@import './mixins.pcss';
+@import url("./mixins.pcss");
 
 :root {
   --primary-color: #197c77;
-  --background-color: #FFFFFF;
-  --text-color: #1E1E1E;
-  --caption-color: #999999;
-  --error-color: #FF2F2F;
+  --secondary-color: #b6d6c7;
+  --background-color: #fff;
+  --secondary-background-color: #fbfbfb;
+  --text-color: #1e1e1e;
+  --caption-color: #999;
+  --error-color: #ff2f2f;
+  --fill-color: #efefef;
 }
 
 body {
   margin: 0 auto;
   color: var(--text-color);
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-weight: 500;
+
   @mixin text-font 13px;
 }
 

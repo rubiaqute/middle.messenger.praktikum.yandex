@@ -1,2 +1,2 @@
-import './link.pcss';
-export { default as Link } from './link.hbs?raw';
+import "./link.pcss";
+export { Link } from "./link";

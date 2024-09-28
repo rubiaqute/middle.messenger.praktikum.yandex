@@ -1,26 +1,35 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .profile-field {
+  .input-block {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
 
-    .label {
-        color: var(--text-color);
-        @mixin text-font 13px;
-    }
+  .label {
+    color: var(--text-color);
 
-    .input {
-        outline: none;
-        border: none;
-        text-align: right;
-        background-color: var(--background-color);
-        padding: 7px 0;
-        color: var(--caption-color);
-        @mixin text-font 13px;
-    }
+    @mixin text-font 13px;
+  }
+
+  .input {
+    outline: none;
+    border: none;
+    text-align: right;
+    background-color: var(--background-color);
+    padding: 7px 0;
+    color: var(--caption-color);
+
+    @mixin text-font 13px;
+  }
+
+  .error {
+    text-align: right;
+    color: var(--error-color);
+  }
 }
 
 .profile-field:not(:last-child) {
-    border-bottom: 1px solid var(--caption-color);
+  border-bottom: 1px solid var(--caption-color);
 }
