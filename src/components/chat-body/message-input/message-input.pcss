@@ -1,0 +1,50 @@
+@import url("./../../../styles/mixins.pcss");
+
+.message-input-group {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 12px;
+  align-items: center;
+  height: 32px;
+  padding: 8px;
+  border-top: 1px solid var(--fill-color);
+
+  .input {
+    height: 12px;
+    padding: 10px;
+    border-radius: 30px;
+    outline: none;
+    border: none;
+    text-align: left;
+    background-color: var(--fill-color);
+    color: var(--caption-color);
+
+    @mixin text-font 13px;
+  }
+
+  .button-wrapper {
+    width: 32px;
+    height: 32px;
+    margin: auto;
+
+    .button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      @mixin button;
+
+      background-color: transparent;
+
+      img {
+        display: block;
+      }
+    }
+  }
+}
+
+.error {
+  color: var(--error-color);
+}

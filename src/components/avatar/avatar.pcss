@@ -1,38 +1,37 @@
 .image-wrapper {
-    position: relative;
-    margin: auto;
-    width: 130px;
-    height: 130px;
-    background-color: #EFEFEF;
+  position: relative;
+  margin: auto;
+  width: 130px;
+  height: 130px;
+  background-color: var(--fill-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .hovered-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.5;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--background-color);
+    visibility: hidden;
+  }
 
-    &:hover {
-        cursor: pointer;
-    }
+  &:hover {
+    cursor: pointer;
+  }
 
-    &:hover .hovered-content {
-        visibility: visible;
-    }
+  &:hover .hovered-content {
+    visibility: visible;
+  }
 
-    .avatar {
-        display: block;
-    }
-
-    .hovered-content {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: #000000;
-        opacity: 0.5;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: var(--background-color);
-
-        visibility: hidden;
-    }
+  .avatar {
+    display: block;
+  }
 }

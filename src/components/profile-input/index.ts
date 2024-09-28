@@ -1,2 +1,2 @@
-import './profile-input.pcss';
-export { default as ProfileInput } from './profile-input.hbs?raw';
+import "./profile-input.pcss";
+export { ProfileInput } from "./profile-input";

@@ -1,19 +1,19 @@
-@import './../../styles/mixins.pcss';
+@import url("./../../styles/mixins.pcss");
 
 .error-page {
-    height: 100vh;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-    
-    .title {
-        @mixin text-font 40px;
-    }
+  .title {
+    @mixin text-font 40px;
+  }
 
-    .subtitle {
-        margin: 20px 0 70px;
-        @mixin text-font 20px;
-    }
+  .subtitle {
+    margin: 20px 0 70px;
+
+    @mixin text-font 20px;
+  }
 }
