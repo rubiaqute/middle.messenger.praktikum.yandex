@@ -1,2 +1,2 @@
-import './form-input.pcss';
-export { default as FormInput } from './form-input.hbs?raw';
+import "./form-input.pcss";
+export { FormInput } from "./form-input";
