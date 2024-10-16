@@ -6,5 +6,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentPath = location.pathname;
   const app = new App();
 
-  app.render(currentPath);
+  app.render();
 });

@@ -53,16 +53,16 @@ export class ProfilePage extends Block<ProfilePageProps> {
           isDisabled: props.pageMode === "basic",
           value:
             props.profileData[
-              getProfileInputKey(cur.id as FilledProfileInputs)
+            getProfileInputKey(cur.id as FilledProfileInputs)
             ] ?? "",
           error: "",
           events:
             props.pageMode === "basic"
               ? {}
               : {
-                  change: (e: Event) => this.changeForm(e, cur.id),
-                  blur: (e: Event) => this.validate(e, cur.id),
-                },
+                change: (e: Event) => this.changeForm(e, cur.id),
+                blur: (e: Event) => this.validate(e, cur.id),
+              },
         });
         return acc;
       }, {}),
@@ -100,7 +100,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
     this.changePasswordFormValues = {
       [ProfileInputs.ProfileInputOldPassword]:
         props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputOldPassword)
+        getProfileInputKey(ProfileInputs.ProfileInputOldPassword)
         ],
       [ProfileInputs.ProfileInputNewPassword]: "",
       [ProfileInputs.ProfileInputRepeatNewPassword]: "",
@@ -113,15 +113,15 @@ export class ProfilePage extends Block<ProfilePageProps> {
         props.profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
       [ProfileInputs.ProfileInputFirstName]:
         props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputFirstName)
+        getProfileInputKey(ProfileInputs.ProfileInputFirstName)
         ],
       [ProfileInputs.ProfileInputSecondName]:
         props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputSecondName)
+        getProfileInputKey(ProfileInputs.ProfileInputSecondName)
         ],
       [ProfileInputs.ProfileInputDisplayName]:
         props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
+        getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
         ],
       [ProfileInputs.ProfileInputPhone]:
         props.profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
@@ -172,8 +172,8 @@ export class ProfilePage extends Block<ProfilePageProps> {
       value:
         this.props.pageMode === "changePassword"
           ? this.changePasswordFormValues[
-              childKey as keyof ChangePasswodProfileForm
-            ]
+          childKey as keyof ChangePasswodProfileForm
+          ]
           : this.editFormValues[childKey as keyof EditProfileForm],
     });
   }
@@ -184,46 +184,46 @@ export class ProfilePage extends Block<ProfilePageProps> {
     const errors =
       this.props.pageMode === "changePassword"
         ? {
-            [ProfileInputs.ProfileInputOldPassword]: validatePassword(
+          [ProfileInputs.ProfileInputOldPassword]: validatePassword(
+            this.changePasswordFormValues[
+            ProfileInputs.ProfileInputOldPassword
+            ],
+          ),
+          [ProfileInputs.ProfileInputNewPassword]: validatePassword(
+            this.changePasswordFormValues[
+            ProfileInputs.ProfileInputNewPassword
+            ],
+          ),
+          [ProfileInputs.ProfileInputRepeatNewPassword]:
+            validateRepeatPassword(
               this.changePasswordFormValues[
-                ProfileInputs.ProfileInputOldPassword
+              ProfileInputs.ProfileInputNewPassword
+              ],
+              this.changePasswordFormValues[
+              ProfileInputs.ProfileInputRepeatNewPassword
               ],
             ),
-            [ProfileInputs.ProfileInputNewPassword]: validatePassword(
-              this.changePasswordFormValues[
-                ProfileInputs.ProfileInputNewPassword
-              ],
-            ),
-            [ProfileInputs.ProfileInputRepeatNewPassword]:
-              validateRepeatPassword(
-                this.changePasswordFormValues[
-                  ProfileInputs.ProfileInputNewPassword
-                ],
-                this.changePasswordFormValues[
-                  ProfileInputs.ProfileInputRepeatNewPassword
-                ],
-              ),
-          }
+        }
         : {
-            [ProfileInputs.ProfileInputLogin]: validateLogin(
-              this.editFormValues[ProfileInputs.ProfileInputLogin],
-            ),
-            [ProfileInputs.ProfileInputEmail]: validateEmail(
-              this.editFormValues[ProfileInputs.ProfileInputEmail],
-            ),
-            [ProfileInputs.ProfileInputFirstName]: validateName(
-              this.editFormValues[ProfileInputs.ProfileInputFirstName],
-            ),
-            [ProfileInputs.ProfileInputSecondName]: validateName(
-              this.editFormValues[ProfileInputs.ProfileInputSecondName],
-            ),
-            [ProfileInputs.ProfileInputDisplayName]: validateName(
-              this.editFormValues[ProfileInputs.ProfileInputDisplayName],
-            ),
-            [ProfileInputs.ProfileInputPhone]: validatePhone(
-              this.editFormValues[ProfileInputs.ProfileInputPhone],
-            ),
-          };
+          [ProfileInputs.ProfileInputLogin]: validateLogin(
+            this.editFormValues[ProfileInputs.ProfileInputLogin],
+          ),
+          [ProfileInputs.ProfileInputEmail]: validateEmail(
+            this.editFormValues[ProfileInputs.ProfileInputEmail],
+          ),
+          [ProfileInputs.ProfileInputFirstName]: validateName(
+            this.editFormValues[ProfileInputs.ProfileInputFirstName],
+          ),
+          [ProfileInputs.ProfileInputSecondName]: validateName(
+            this.editFormValues[ProfileInputs.ProfileInputSecondName],
+          ),
+          [ProfileInputs.ProfileInputDisplayName]: validateName(
+            this.editFormValues[ProfileInputs.ProfileInputDisplayName],
+          ),
+          [ProfileInputs.ProfileInputPhone]: validatePhone(
+            this.editFormValues[ProfileInputs.ProfileInputPhone],
+          ),
+        };
 
     if (Object.values(errors).every((value) => value === "")) {
       console.log(
@@ -246,8 +246,8 @@ export class ProfilePage extends Block<ProfilePageProps> {
         value:
           this.props.pageMode === "changePassword"
             ? this.changePasswordFormValues[
-                key as keyof ChangePasswodProfileForm
-              ]
+            key as keyof ChangePasswodProfileForm
+            ]
             : this.editFormValues[key as keyof EditProfileForm],
       });
     });
@@ -266,5 +266,32 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
   render() {
     return ProfilePageTemplate;
+  }
+}
+
+export class ProfileEditPage extends ProfilePage {
+  constructor(profileData: ProfileData) {
+    super({
+      pageMode: 'edit',
+      profileData,
+    })
+  }
+}
+
+export class ProfileChangePasswordPage extends ProfilePage {
+  constructor(profileData: ProfileData) {
+    super({
+      pageMode: 'changePassword',
+      profileData
+    })
+  }
+}
+
+export class ProfileSettingsPage extends ProfilePage {
+  constructor(profileData: ProfileData) {
+    super({
+      pageMode: 'basic',
+      profileData,
+    })
   }
 }

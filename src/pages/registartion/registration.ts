@@ -13,7 +13,7 @@ import { FormInputs, inputsLDataList } from "./utils";
 
 type RegistrationPageForm = Record<FormInputs, string>;
 
-class RegistrationPage extends Block<BasicBlockProps> {
+export class RegistrationPage extends Block<BasicBlockProps> {
   formValues: RegistrationPageForm = {
     [FormInputs.FormInputLogin]: "",
     [FormInputs.FormInputPassword]: "",

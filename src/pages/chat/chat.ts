@@ -3,7 +3,8 @@ import { ChatBody } from "../../components/chat-body";
 import { BasicBlockProps, Block } from "../../components/common/block";
 import { chatList } from "../../mock";
 import ChatPageTemplate from "./chat.hbs?raw";
-class ChatPage extends Block<BasicBlockProps> {
+
+export class ChatPage extends Block<BasicBlockProps> {
   constructor() {
     super({
       ChatList: new ChatList({

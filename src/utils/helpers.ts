@@ -32,3 +32,47 @@ export const getDateFormat = (date: Date) => {
 
   return date.toLocaleDateString("ru-Ru", { month: "short", day: "2-digit" });
 };
+
+export function set(object: Indexed | unknown, path: string, value: unknown): Indexed | unknown {
+  if (typeof path !== 'string') {
+    throw new Error('path must be string')
+  }
+  if (typeof object !== 'object') {
+    return object
+  }
+
+  const source = path.split('.').reduceRight((acc, cur) => {
+    return {
+      [cur]: acc
+    }
+  }, value)
+
+  return merge(object as Indexed, source as Indexed)
+
+}
+
+type Indexed<T = any> = {
+  [key in string]: T;
+};
+
+function merge(lhs: Indexed, rhs: Indexed): Indexed {
+  for (let p in rhs) {
+    if (!rhs.hasOwnProperty(p)) {
+      continue;
+    }
+
+    try {
+      if (rhs[p].constructor === Object) {
+        rhs[p] = merge(lhs[p] as Indexed, rhs[p] as Indexed);
+      } else {
+        lhs[p] = rhs[p];
+      }
+    } catch (e) {
+      lhs[p] = rhs[p];
+    }
+  }
+
+  return lhs;
+}
+
+export default set

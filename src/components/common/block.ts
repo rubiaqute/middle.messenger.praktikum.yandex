@@ -12,7 +12,7 @@ type ChildProps = BasicBlockProps & {
 }
 type Children = Block<ChildProps>
 
-export abstract class Block<Props extends BasicBlockProps> {
+export class Block<Props extends BasicBlockProps> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -68,7 +68,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.addSpecificEvents();
   }
 
-  public addSpecificEvents() {}
+  public addSpecificEvents() { }
 
   private _removeEvents() {
     const events = (this.props.events ?? {}) as Events;
@@ -82,7 +82,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.removeSpecificEvents();
   }
 
-  public removeSpecificEvents() {}
+  public removeSpecificEvents() { }
 
   public getContent(): HTMLElement {
     if (!this._element) {
@@ -116,7 +116,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.componentDidMount();
   }
 
-  public componentDidMount() {}
+  public componentDidMount() { }
 
   private _componentDidUpdate() {
     if (this.element) {

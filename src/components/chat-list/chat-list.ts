@@ -17,7 +17,7 @@ export class ChatList extends Block<ChatListProps> {
       ...props,
       Link: new Link({
         _id: "Link",
-        href: "/profile",
+        href: "/settings",
         text: "Профиль >",
       }),
       SearchInput: new SearchInput({

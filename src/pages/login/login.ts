@@ -10,7 +10,7 @@ enum FormInputs {
 
 type LoginPageForm = Record<FormInputs, string>;
 
-class LoginPage extends Block<BasicBlockProps> {
+export class LoginPage extends Block<BasicBlockProps> {
   formValues: LoginPageForm = {
     [FormInputs.FormInputLogin]: "",
     [FormInputs.FormInputPassword]: "",
@@ -45,7 +45,7 @@ class LoginPage extends Block<BasicBlockProps> {
       }),
       Link: new Link({
         _id: "Link",
-        href: "/registration",
+        href: "/sign-up",
         text: "Нет аккаунта?",
       }),
       Button: new Button({

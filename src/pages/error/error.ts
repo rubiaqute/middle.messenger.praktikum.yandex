@@ -7,7 +7,7 @@ export interface ErrorPageProps extends Record<string, unknown> {
   subTitle: string;
 }
 
-export class ErrorPage extends Block<ErrorPageProps> {
+class ErrorPage extends Block<ErrorPageProps> {
   constructor(props: ErrorPageProps) {
     super({
       ...props,
@@ -20,5 +20,23 @@ export class ErrorPage extends Block<ErrorPageProps> {
   }
   render() {
     return ErrorPageTemplate;
+  }
+}
+
+export class ErrorNotFoundPage extends ErrorPage {
+  constructor() {
+    super({
+      title: "404",
+      subTitle: "Не туда попали"
+    })
+  }
+}
+
+export class ErrorServerPage extends ErrorPage {
+  constructor() {
+    super({
+      title: "500",
+      subTitle: "Мы уже фиксим",
+    })
   }
 }
