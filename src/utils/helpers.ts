@@ -1,3 +1,4 @@
+import { Modal } from "../components";
 import { Block } from "../components/common/block";
 
 export function renderInDom<K extends Record<string, unknown>>(
@@ -15,6 +16,31 @@ export function renderInDom<K extends Record<string, unknown>>(
   block.dispatchComponentDidMount();
 
   return root;
+}
+
+export function deleteFromDom<K extends Record<string, unknown>>(
+  query: string,
+  block: Block<K>,
+) {
+  const root = document.querySelector(query);
+
+  const content = block.getContent();
+
+  if (content) {
+    root?.removeChild(content);
+  }
+
+  block.dispatchComponentUnMount();
+
+  return root;
+}
+
+export const showNotification = (text: string) => {
+  const modal = new Modal({
+    text,
+    whenClose: () => deleteFromDom('.app', modal)
+  })
+  renderInDom('.app', modal)
 }
 
 export const getDateFormat = (date: Date) => {
@@ -74,5 +100,6 @@ function merge(lhs: Indexed, rhs: Indexed): Indexed {
 
   return lhs;
 }
+
 
 export default set

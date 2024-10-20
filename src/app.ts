@@ -13,8 +13,9 @@ import {
 
 import { BasicBlockProps, Block } from "./components/common/block";
 import { Router } from "./utils/router";
-import { connect } from "./utils/store";
+import { connect, store } from "./utils/store";
 import { ProfileData } from "./pages/profile/utils";
+import { AuthApi } from "./api/auth-api";
 
 export enum Page {
   login = "/",
@@ -30,10 +31,27 @@ export enum Page {
 export const router = new Router('app');
 
 export default class App {
-  constructor() {
+  userApi = new AuthApi()
 
+  constructor() {
+    this.initApp()
+
+  }
+
+  async initApp() {
+    this.initRouter()
+    if (!store.getState().profile.profileData.id) {
+      const info = await this.userApi.getInfo() as { response: string }
+
+      if (info.response) {
+        store.set('profile.profileData', info.response)
+      }
+    }
+
+  }
+
+  initRouter() {
     const profileSettingsPage = connect<ProfileData>(ProfileSettingsPage as unknown as typeof Block<BasicBlockProps>, (state) => state.profile.profileData)
-    const profileEditPage = connect<ProfileData>(ProfileEditPage as unknown as typeof Block<BasicBlockProps>, (state) => state.profile.profileData)
     const profileChangePasswordPage = connect<ProfileData>(ProfileChangePasswordPage as unknown as typeof Block<BasicBlockProps>, (state) => state.profile.profileData)
 
     router
@@ -41,7 +59,7 @@ export default class App {
       .use(Page.signUp, RegistrationPage)
       .use(Page.messenger, ChatPage)
       .use(Page.settings, profileSettingsPage)
-      .use(Page.profileEdit, profileEditPage)
+      .use(Page.profileEdit, ProfileEditPage as unknown as typeof Block<BasicBlockProps>)
       .use(Page.profilePassword, profileChangePasswordPage)
       .use(Page.notFoundError, ErrorNotFoundPage as unknown as typeof Block<BasicBlockProps>)
       .use(Page.serverError, ErrorServerPage as unknown as typeof Block<BasicBlockProps>)

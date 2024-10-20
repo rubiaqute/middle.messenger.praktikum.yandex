@@ -18,6 +18,7 @@ export class Block<Props extends BasicBlockProps> {
     FLOW_CDM: "flow:component-did-mount",
     FLOW_RENDER: "flow:render",
     UPDATE: "flow:component-did-update",
+    UNMOUNT: "flow:component-did-unmount",
   };
 
   private children: Record<string, Children> = {};
@@ -54,6 +55,7 @@ export class Block<Props extends BasicBlockProps> {
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     eventBus.on(Block.EVENTS.UPDATE, this._componentDidUpdate.bind(this));
+    eventBus.on(Block.EVENTS.UNMOUNT, this._componentDidUnmount.bind(this));
   }
 
   private _addEvents() {
@@ -95,6 +97,10 @@ export class Block<Props extends BasicBlockProps> {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
+  public dispatchComponentUnMount() {
+    this.eventBus().emit(Block.EVENTS.UNMOUNT);
+  }
+
   public updateLists(key: string, newList: Block<BasicBlockProps>[]) {
     this.lists[key] = newList;
   }
@@ -114,6 +120,13 @@ export class Block<Props extends BasicBlockProps> {
 
   private _componentDidMount() {
     this.componentDidMount();
+  }
+
+  private _componentDidUnmount() {
+    if (this.element) {
+      this._removeEvents();
+      this.element.innerHTML = "";
+    }
   }
 
   public componentDidMount() { }

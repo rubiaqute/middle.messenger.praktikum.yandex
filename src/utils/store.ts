@@ -1,6 +1,4 @@
 import { BasicBlockProps, Block } from "../components/common/block";
-import { profileData } from "../mock";
-import { ProfilePageMode } from "../pages/profile/profile";
 import { ProfileData } from "../pages/profile/utils";
 import { EventBus } from "./event-bus";
 import set from "./helpers";
@@ -11,7 +9,7 @@ export function connect<T>(Component: typeof Block<BasicBlockProps>, mapStateToP
             super({ ...props, ...mapStateToProps(store.getState()) });
 
             store.on(StoreEvents.Updated, () => {
-                this.setProps({ ...mapStateToProps(store.getState()) } as BasicBlockProps);
+                this.setProps({ ...props, ...mapStateToProps(store.getState()) } as BasicBlockProps);
             });
         }
     }
@@ -23,14 +21,24 @@ export enum StoreEvents {
 
 export type IStore = {
     profile: {
-        profileData: ProfileData
+        profileData: ProfileData,
+        avatarUrl: string
     }
 }
 
 class Store extends EventBus {
     private state: IStore = {
         profile: {
-            profileData: profileData
+            profileData: {
+                first_name: '',
+                second_name: '',
+                display_name: null,
+                login: '',
+                avatar: null,
+                email: '',
+                phone: ''
+            },
+            avatarUrl: ''
         }
     };
 

@@ -1,7 +1,13 @@
 import AvatarTemplate from "./avatar.hbs?raw";
-import { BasicBlockProps, Block } from "../common/block";
+import { Input } from "../common/input";
+import { Events } from "../common/block";
 
-export class Avatar extends Block<BasicBlockProps> {
+interface AvatarProps extends Record<string, unknown> {
+  avatarUrl: string;
+  events: Events
+}
+
+export class Avatar extends Input<AvatarProps> {
   render() {
     return AvatarTemplate;
   }

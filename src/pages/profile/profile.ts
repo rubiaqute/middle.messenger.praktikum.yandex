@@ -1,4 +1,4 @@
-import { Block } from "../../components/common/block";
+import { BasicBlockProps, Block } from "../../components/common/block";
 import ProfilePageTemplate from "./profile.hbs?raw";
 import {
   Avatar,
@@ -25,6 +25,11 @@ import {
   ProfileData,
   ProfileInputs,
 } from "./utils";
+import { connect, store, StoreEvents } from "../../utils/store";
+import { UserController } from "../../controllers/user-controller";
+import { Page, router } from "../../app";
+import { showNotification } from "../../utils/helpers";
+import { BASE_URL } from "../../api/api-service";
 
 export type ProfilePageMode = "basic" | "edit" | "changePassword";
 
@@ -36,34 +41,39 @@ export interface ProfilePageProps extends Record<string, unknown> {
 export class ProfilePage extends Block<ProfilePageProps> {
   editFormValues: EditProfileForm;
   changePasswordFormValues: ChangePasswodProfileForm;
+  userController = new UserController()
 
   constructor(props: ProfilePageProps) {
     super({
       SidePanel: new SidePanel({ _id: "SidePanel" }),
-      Avatar: new Avatar({ _id: "Avatar" }),
+      Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: `${BASE_URL}/Resources/${state.profile.profileData.avatar}` })) as unknown as typeof Avatar)({
+        _id: "Avatar",
+        avatarUrl: './union.svg',
+        events: {
+          change: (e) => this.changeAvatar(e)
+        }
+      }),
       ...(props.pageMode === "changePassword"
         ? inputsChangePasswordDataList
         : inputsProfileDataList
       ).reduce<Partial<Record<ProfileInputs, ProfileInput>>>((acc, cur) => {
-        acc[cur.id] = new ProfileInput({
+        const withStoreInput = connect(ProfileInput as unknown as typeof Block<BasicBlockProps>, (state) => ({ value: state.profile.profileData[getProfileInputKey(cur.id as FilledProfileInputs)] }))
+
+        acc[cur.id] = new withStoreInput({
           _id: cur.id,
           name: cur.name,
           label: cur.label,
           type: cur.type,
           isDisabled: props.pageMode === "basic",
-          value:
-            props.profileData[
-            getProfileInputKey(cur.id as FilledProfileInputs)
-            ] ?? "",
+          value: props.profileData[getProfileInputKey(cur.id as FilledProfileInputs)] ?? "",
           error: "",
-          events:
-            props.pageMode === "basic"
-              ? {}
-              : {
-                change: (e: Event) => this.changeForm(e, cur.id),
-                blur: (e: Event) => this.validate(e, cur.id),
-              },
-        });
+          events: props.pageMode === "basic"
+            ? {}
+            : {
+              change: (e: Event) => this.changeForm(e, cur.id),
+              blur: (e: Event) => this.validate(e, cur.id),
+            },
+        }) as unknown as ProfileInput;
         return acc;
       }, {}),
       Button: new Button({
@@ -99,9 +109,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
     this.changePasswordFormValues = {
       [ProfileInputs.ProfileInputOldPassword]:
-        props.profileData[
-        getProfileInputKey(ProfileInputs.ProfileInputOldPassword)
-        ],
+        '',
       [ProfileInputs.ProfileInputNewPassword]: "",
       [ProfileInputs.ProfileInputRepeatNewPassword]: "",
     };
@@ -125,7 +133,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
         ],
       [ProfileInputs.ProfileInputPhone]:
         props.profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
-    };
+    } as EditProfileForm;
   }
 
   validate(e: Event, childKey: ProfileInputs) {
@@ -178,7 +186,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
     });
   }
 
-  submitForm(e: Event): void {
+  async submitForm(e: Event): Promise<void> {
     e.preventDefault();
 
     const errors =
@@ -226,11 +234,33 @@ export class ProfilePage extends Block<ProfilePageProps> {
         };
 
     if (Object.values(errors).every((value) => value === "")) {
-      console.log(
-        this.props.pageMode === "changePassword"
-          ? this.changePasswordFormValues
-          : this.editFormValues,
-      );
+      if (this.props.pageMode === 'edit') {
+        const result = await this.userController.changeProfile({
+          login: this.editFormValues.ProfileInputLogin,
+          first_name: this.editFormValues.ProfileInputFirstName,
+          second_name: this.editFormValues.ProfileInputSecondName,
+          display_name: this.editFormValues.ProfileInputDisplayName,
+          phone: this.editFormValues.ProfileInputPhone,
+          email: this.editFormValues.ProfileInputEmail
+        })
+
+        if (result.isSuccess) {
+          router.go(Page.settings)
+        } else {
+          showNotification(result.error)
+        }
+      } else {
+        const result = await this.userController.changePassword({
+          oldPassword: this.changePasswordFormValues.ProfileInputOldPassword,
+          newPassword: this.changePasswordFormValues.ProfileInputNewPassword
+        })
+
+        if (result.isSuccess) {
+          router.go(Page.settings)
+        } else {
+          showNotification(result.error)
+        }
+      }
     }
 
     Object.keys(
@@ -267,6 +297,30 @@ export class ProfilePage extends Block<ProfilePageProps> {
   render() {
     return ProfilePageTemplate;
   }
+
+  async changeAvatar(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0]
+
+    if (file) {
+      const payload = new FormData()
+      payload.append('avatar', file)
+      const result = await this.userController.changeAvatar(payload)
+
+      if (!result.isSuccess) {
+        showNotification(result.error)
+      }
+    }
+
+    // const file = (e.target as HTMLInputElement)?.files?.[0]
+    // if (file) {
+    //   const formData = new FormData()
+    //   formData.set('avatar', file)
+    //   console.log(formData.values())
+    //   this.userController.changeAvatar(formData)
+    // }
+  }
+
+
 }
 
 export class ProfileEditPage extends ProfilePage {
@@ -275,6 +329,32 @@ export class ProfileEditPage extends ProfilePage {
       pageMode: 'edit',
       profileData,
     })
+
+    store.on(StoreEvents.Updated, () => {
+      this.setProps({ ...this.props, profileData: store.getState().profile.profileData } as ProfilePageProps);
+
+      this.editFormValues = {
+        [ProfileInputs.ProfileInputEmail]:
+          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputEmail)],
+        [ProfileInputs.ProfileInputLogin]:
+          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
+        [ProfileInputs.ProfileInputFirstName]:
+          this.props.profileData[
+          getProfileInputKey(ProfileInputs.ProfileInputFirstName)
+          ],
+        [ProfileInputs.ProfileInputSecondName]:
+          this.props.profileData[
+          getProfileInputKey(ProfileInputs.ProfileInputSecondName)
+          ],
+        [ProfileInputs.ProfileInputDisplayName]:
+          this.props.profileData[
+          getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
+          ],
+        [ProfileInputs.ProfileInputPhone]:
+          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
+      } as EditProfileForm;
+    });
+
   }
 }
 

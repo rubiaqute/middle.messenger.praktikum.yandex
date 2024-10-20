@@ -6,3 +6,4 @@ export { ProfileInput } from "./profile-input";
 export { Avatar } from "./avatar";
 export { ChatList } from "./chat-list";
 export { SearchInput } from "./search-input";
+export { Modal } from "./modal";
