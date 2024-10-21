@@ -15,7 +15,7 @@ import { BasicBlockProps, Block } from "./components/common/block";
 import { Router } from "./utils/router";
 import { connect, store } from "./utils/store";
 import { ProfileData } from "./pages/profile/utils";
-import { AuthApi } from "./api/auth-api";
+import { UserController } from "./controllers/user-controller";
 
 export enum Page {
   login = "/",
@@ -31,23 +31,15 @@ export enum Page {
 export const router = new Router('app');
 
 export default class App {
-  userApi = new AuthApi()
+  userController = new UserController()
 
   constructor() {
     this.initApp()
-
   }
 
-  async initApp() {
+  initApp() {
     this.initRouter()
-    if (!store.getState().profile.profileData.id) {
-      const info = await this.userApi.getInfo() as { response: string }
-
-      if (info.response) {
-        store.set('profile.profileData', info.response)
-      }
-    }
-
+    this.initPathGuard()
   }
 
   initRouter() {
@@ -64,6 +56,26 @@ export default class App {
       .use(Page.notFoundError, ErrorNotFoundPage as unknown as typeof Block<BasicBlockProps>)
       .use(Page.serverError, ErrorServerPage as unknown as typeof Block<BasicBlockProps>)
       .start();
+  }
+
+  async initPathGuard() {
+    if (router.currentPath === Page.login || router.currentPath === Page.signUp) {
+      const isSuccess = await this.userController.getUserInfo()
+
+      if (isSuccess) {
+        router.go(Page.messenger)
+      }
+    }
+
+    if ([Page.settings, Page.profileEdit, Page.messenger, Page.profilePassword].some((path) => path === router.currentPath)) {
+      if (!store.getState().profile.profileData.id) {
+        const isSuccess = await this.userController.getUserInfo()
+
+        if (!isSuccess) {
+          router.go(Page.login)
+        }
+      }
+    }
   }
 
   render() {

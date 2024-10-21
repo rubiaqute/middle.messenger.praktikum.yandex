@@ -11,7 +11,7 @@ import {
 } from "../../utils/validation";
 import { FormInputs, inputsLDataList } from "./utils";
 import { UserController } from "../../controllers/user-controller";
-import { router } from "../../app";
+import { Page, router } from "../../app";
 import { showNotification } from "../../utils/helpers";
 
 type RegistrationPageForm = Record<FormInputs, string>;
@@ -148,7 +148,7 @@ export class RegistrationPage extends Block<BasicBlockProps> {
       })
 
       if (result.isSuccess) {
-        router.go('/')
+        router.go(Page.messenger)
       } else {
         showNotification(result.error)
       }

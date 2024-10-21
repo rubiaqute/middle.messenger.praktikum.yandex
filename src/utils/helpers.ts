@@ -46,6 +46,10 @@ export const showNotification = (text: string) => {
 export const getDateFormat = (date: Date) => {
   const today = new Date();
 
+  if (isNaN(date.getDate())) {
+    return ''
+  }
+
   if (
     today.getDate() === date.getDate() &&
     today.getMonth() === date.getMonth()

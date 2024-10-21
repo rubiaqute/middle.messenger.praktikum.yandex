@@ -46,6 +46,18 @@ export class UserController {
         }
     }
 
+    async getUserInfo() {
+        const result = await this.authApi.getInfo() as Response
+        const info = (result as unknown as { response: string }).response
+        const isSuccess = result.status === 200
+
+        if (info && isSuccess) {
+            store.set('profile.profileData', info)
+        }
+
+        return isSuccess
+    }
+
     async signIn(payload: UserLogin) {
         const response = await this.authApi.signIn(payload)
 
@@ -54,8 +66,7 @@ export class UserController {
 
 
         if (isAuthorised) {
-            const profileData = await this.authApi.getInfo() as { response: string }
-            store.set('profile.profileData', profileData.response)
+            this.getUserInfo()
         }
 
         return {
@@ -68,8 +79,7 @@ export class UserController {
         const response = await this.userApi.changeProfile(payload)
 
         if ((response as Response).status === 200) {
-            const profileData = await this.authApi.getInfo() as { response: string }
-            store.set('profile.profileData', profileData.response)
+            this.getUserInfo()
         }
 
         return {
@@ -91,8 +101,7 @@ export class UserController {
         const response = await this.userApi.changeAvatar(formData)
 
         if ((response as Response).status === 200) {
-            const profileData = await this.authApi.getInfo() as { response: string }
-            store.set('profile.profileData', profileData.response)
+            this.getUserInfo()
         }
 
         return {

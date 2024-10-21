@@ -310,14 +310,6 @@ export class ProfilePage extends Block<ProfilePageProps> {
         showNotification(result.error)
       }
     }
-
-    // const file = (e.target as HTMLInputElement)?.files?.[0]
-    // if (file) {
-    //   const formData = new FormData()
-    //   formData.set('avatar', file)
-    //   console.log(formData.values())
-    //   this.userController.changeAvatar(formData)
-    // }
   }
 
 

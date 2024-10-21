@@ -1,3 +1,4 @@
+import { FetchData } from "../api/api-service";
 import { BasicBlockProps, Block } from "../components/common/block";
 import { ProfileData } from "../pages/profile/utils";
 import { EventBus } from "./event-bus";
@@ -19,10 +20,50 @@ export enum StoreEvents {
     Updated = 'updated',
 }
 
+export interface IChatItemRaw extends FetchData {
+    id: number,
+    title: string,
+    avatar: string,
+    unread_count: number,
+    created_by: number,
+    last_message: {
+        user: {
+            first_name: string,
+            second_name: string,
+            avatar: string,
+            email: string,
+            login: string,
+            phone: string
+        },
+        time: string,
+        content: string
+    }
+}
+
+export interface ChatMessage {
+    id: number,
+    user_id: number,
+    chat_id: number,
+    type: string,
+    time: string,
+    content: string,
+    is_read: boolean,
+    file: null
+}
+
+export interface IActiveChat extends FetchData {
+    messages: ChatMessage[],
+    chatTitle: string
+}
+
 export type IStore = {
     profile: {
         profileData: ProfileData,
-        avatarUrl: string
+    },
+    chat: {
+        chatsList: IChatItemRaw[],
+        activeChatToken: string
+        activeChat: IActiveChat | null
     }
 }
 
@@ -38,7 +79,11 @@ class Store extends EventBus {
                 email: '',
                 phone: ''
             },
-            avatarUrl: ''
+        },
+        chat: {
+            chatsList: [],
+            activeChatToken: '',
+            activeChat: null
         }
     };
 

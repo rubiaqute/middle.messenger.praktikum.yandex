@@ -1,31 +1,52 @@
 import { ChatList } from "../../components";
 import { ChatBody } from "../../components/chat-body";
 import { BasicBlockProps, Block } from "../../components/common/block";
-import { chatList } from "../../mock";
+import { ChatController } from "../../controllers/chat-controller";
+import { store } from "../../utils/store";
 import ChatPageTemplate from "./chat.hbs?raw";
 
 export class ChatPage extends Block<BasicBlockProps> {
+  chatContoller = new ChatController()
   constructor() {
     super({
       ChatList: new ChatList({
         _id: "ChatList",
-        chatList,
+        chatList: [],
         whenClickItem: (chatId) => this.changeActiveChat(chatId),
       }),
       ChatBody: new ChatBody({
         _id: "ChatBody",
-        chat: chatList[0],
+        chat: null,
+        whenSendMessage: (message) => this.sendMessage(message)
       }),
     });
+
+    this.getChats()
   }
 
-  changeActiveChat(chatId: number) {
-    const newActiveChat =
-      chatList.find((chatItem) => chatItem.id === chatId) ?? chatList[0];
+  getChats() {
+    this.chatContoller.getChats()
+  }
 
-    (this.childrenNodes.ChatBody as unknown as ChatBody).updateChatBody(
-      newActiveChat,
-    );
+  sendMessage(message: string) {
+    this.chatContoller.sendMessage(message)
+  }
+
+  async changeActiveChat(chatId: number) {
+    this.chatContoller.closeChat()
+    const chatList = store.getState().chat.chatsList
+    const newActiveChat =
+      chatList.find((chatItem) => chatItem.id === chatId) ?? null;
+
+    if (newActiveChat?.id) {
+      await this.chatContoller.openChat(String(newActiveChat.id))
+      this.updateActiveChat(newActiveChat.title)
+    }
+  }
+
+  updateActiveChat(chatTitle: string) {
+    store.set('chat.activeChat.chatTitle', chatTitle)
+    store.set('chat.activeChat.messages', [])
   }
 
   render() {
