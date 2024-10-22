@@ -61,6 +61,10 @@ export default class App {
   }
 
   async initPathGuard() {
+    if (!Object.values(Page).includes(router.currentPath as Page)) {
+      router.go(Page.notFoundError)
+    }
+
     if (router.currentPath === Page.login || router.currentPath === Page.signUp) {
       const isSuccess = await this.userController.getUserInfo()
 

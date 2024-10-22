@@ -63,5 +63,3 @@ export class ChatPage extends Block<BasicBlockProps> {
     return ChatPageTemplate;
   }
 }
-
-export const chatPage = new ChatPage();
