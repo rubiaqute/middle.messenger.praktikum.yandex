@@ -96,8 +96,10 @@ export class ProfilePage extends Block<ProfilePageProps> {
       }),
       LinkExit: new Link({
         _id: "LinkExit",
-        href: "/",
         text: "Выйти",
+        events: {
+          click: () => this.logout()
+        },
         isAlert: true,
       }),
       pageMode: props.pageMode,
@@ -309,6 +311,14 @@ export class ProfilePage extends Block<ProfilePageProps> {
       if (!result.isSuccess) {
         showNotification(result.error)
       }
+    }
+  }
+
+  async logout() {
+    const isSucces = await this.userController.logout()
+
+    if (isSucces) {
+      router.go(Page.login)
     }
   }
 

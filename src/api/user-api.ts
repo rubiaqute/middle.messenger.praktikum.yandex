@@ -18,4 +18,9 @@ export class UserApi extends BaseAPI {
     changeAvatar(payload: FormData) {
         return userApiInstance.put(`${urlBase}/profile/avatar`, { data: payload, contentType: 'multipart/form-data' });
     }
+
+    searchUsers(login: string) {
+        return userApiInstance.post(`${urlBase}/search`, { data: { login } });
+    }
+
 }

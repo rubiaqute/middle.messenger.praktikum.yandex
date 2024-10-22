@@ -16,6 +16,7 @@ import { Router } from "./utils/router";
 import { connect, store } from "./utils/store";
 import { ProfileData } from "./pages/profile/utils";
 import { UserController } from "./controllers/user-controller";
+import { ChatController } from "./controllers/chat-controller";
 
 export enum Page {
   login = "/",
@@ -32,6 +33,7 @@ export const router = new Router('app');
 
 export default class App {
   userController = new UserController()
+  chatContoller = new ChatController()
 
   constructor() {
     this.initApp()

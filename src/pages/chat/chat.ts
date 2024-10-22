@@ -21,11 +21,14 @@ export class ChatPage extends Block<BasicBlockProps> {
       }),
     });
 
-    this.getChats()
+    if (store.getState().chat.chatsList.length === 0) {
+      this.getChats()
+    }
+
   }
 
-  getChats() {
-    this.chatContoller.getChats()
+  async getChats() {
+    await this.chatContoller.getChats()
   }
 
   sendMessage(message: string) {
@@ -39,14 +42,21 @@ export class ChatPage extends Block<BasicBlockProps> {
       chatList.find((chatItem) => chatItem.id === chatId) ?? null;
 
     if (newActiveChat?.id) {
+      this.updateActiveChat(newActiveChat.title, newActiveChat.id)
       await this.chatContoller.openChat(String(newActiveChat.id))
-      this.updateActiveChat(newActiveChat.title)
     }
   }
 
-  updateActiveChat(chatTitle: string) {
-    store.set('chat.activeChat.chatTitle', chatTitle)
-    store.set('chat.activeChat.messages', [])
+  async updateActiveChat(chatTitle: string, chatId: number) {
+    const chatUsers = await this.chatContoller.getChartUsers(chatId)
+    const newActiveChat = {
+      chatTitle,
+      chatId,
+      chatUsers,
+      messages: []
+    }
+
+    store.set('chat.activeChat', newActiveChat)
   }
 
   render() {

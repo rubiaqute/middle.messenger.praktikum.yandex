@@ -51,9 +51,21 @@ export interface ChatMessage {
     file: null
 }
 
+export interface IChatUser {
+    id: number,
+    first_name: string,
+    second_name: string,
+    display_name: string,
+    login: string,
+    avatar: string,
+    role: string
+}
+
 export interface IActiveChat extends FetchData {
     messages: ChatMessage[],
     chatTitle: string
+    chatId: number
+    chatUsers: IChatUser[]
 }
 
 export type IStore = {

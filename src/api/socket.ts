@@ -61,7 +61,7 @@ export class ChatWebsocket {
         if (Array.isArray(response)) {
             store.set('chat.activeChat.messages', response)
         } else {
-            const newMessages = [...(store.getState().chat.activeChat?.messages ?? []), response]
+            const newMessages = [...(store.getState().chat.activeChat?.messages ?? []), response].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
             store.set('chat.activeChat.messages', newMessages)
         }
     }

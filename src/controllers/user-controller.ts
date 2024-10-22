@@ -109,4 +109,15 @@ export class UserController {
             error: `Не удалось изменить пароль ${(response as { response: { reason: string } }).response?.reason ?? ''}`
         }
     }
+
+    async logout() {
+        const response = await this.authApi.logout()
+        const isSucces = (response as Response).status === 200
+
+        if (isSucces) {
+            store.set('profile.profileData', {})
+        }
+
+        return isSucces
+    }
 }

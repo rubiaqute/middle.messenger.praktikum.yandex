@@ -18,4 +18,8 @@ export class AuthApi extends BaseAPI {
     getInfo() {
         return authApiInstance.get(`${urlBase}/user`);
     }
+
+    logout() {
+        return authApiInstance.post(`${urlBase}/logout`);
+    }
 }

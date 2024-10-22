@@ -18,11 +18,20 @@ export class ChatApi extends BaseAPI {
         return chatApiInstance.post(`${urlBase}/token/${chatId}`);
     }
 
-    // changePassword(payload: UserChangePassword) {
-    //     return userApiInstance.put(`${urlBase}/password`, { data: payload });
-    // }
+    deleteChat(chatId: number) {
+        return chatApiInstance.delete(urlBase, { data: { chatId } });
+    }
 
-    // changeAvatar(payload: FormData) {
-    //     return userApiInstance.put(`${urlBase}/profile/avatar`, { data: payload, contentType: 'multipart/form-data' });
-    // }
+    getChartUsers(chatId: number) {
+        return chatApiInstance.get(`${urlBase}/${chatId}/users`);
+    }
+
+    addUserToChat(chatId: number, userId: number) {
+        return chatApiInstance.put(`${urlBase}/users`, {
+            data: {
+                users: [userId],
+                chatId
+            }
+        });
+    }
 }

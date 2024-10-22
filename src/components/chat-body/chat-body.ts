@@ -19,7 +19,7 @@ export class ChatBody extends Block<ChatBodyProps> {
   constructor(props: ChatBodyProps) {
     super({
       ...props,
-      Dropdown: new Dropdown({}),
+      Dropdown: new Dropdown(),
       MessageInput: new MessageInput({
         _id: "MessageInput",
         value: "",
@@ -37,10 +37,12 @@ export class ChatBody extends Block<ChatBodyProps> {
         id: store.getState().chat.activeChat?.chatTitle,
         unreadCount: 0,
         chatName: store.getState().chat.activeChat?.chatTitle,
+        chatUsers: (store.getState().chat.activeChat?.chatUsers ?? []).map((user) => user.display_name ?? user.login).join(', '),
         messages: (store.getState().chat.activeChat?.messages ?? []).map((message) => ({
           isSelf: message.user_id === store.getState().profile.profileData.id,
           time: message.time,
           text: message.content,
+          user: store.getState().chat.activeChat?.chatUsers?.find((user) => user.id === message.user_id)?.display_name ?? store.getState().chat.activeChat?.chatUsers?.find((user) => user.id === message.user_id)?.login
         }))
       } as unknown as IChatItem
 
