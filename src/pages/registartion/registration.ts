@@ -10,10 +10,13 @@ import {
   validateRepeatPassword,
 } from "../../utils/validation";
 import { FormInputs, inputsLDataList } from "./utils";
+import { UserController } from "../../controllers/user-controller";
+import { Page, router } from "../../app";
+import { showNotification } from "../../utils/helpers";
 
 type RegistrationPageForm = Record<FormInputs, string>;
 
-class RegistrationPage extends Block<BasicBlockProps> {
+export class RegistrationPage extends Block<BasicBlockProps> {
   formValues: RegistrationPageForm = {
     [FormInputs.FormInputLogin]: "",
     [FormInputs.FormInputPassword]: "",
@@ -23,6 +26,8 @@ class RegistrationPage extends Block<BasicBlockProps> {
     [FormInputs.FormInputPhone]: "",
     [FormInputs.FormInputRepeatPassword]: "",
   };
+
+  userController = new UserController()
 
   constructor() {
     super({
@@ -104,7 +109,7 @@ class RegistrationPage extends Block<BasicBlockProps> {
     });
   }
 
-  submitForm(e: Event): void {
+  async submitForm(e: Event): Promise<void> {
     e.preventDefault();
 
     const errors = {
@@ -133,7 +138,20 @@ class RegistrationPage extends Block<BasicBlockProps> {
     };
 
     if (Object.values(errors).every((value) => value === "")) {
-      console.log(this.formValues);
+      const result = await this.userController.signUp({
+        first_name: this.formValues.FormInputFirstName,
+        second_name: this.formValues.FormInputSecondName,
+        login: this.formValues.FormInputLogin,
+        email: this.formValues.FormInputEmail,
+        password: this.formValues.FormInputPassword,
+        phone: this.formValues.FormInputPhone
+      })
+
+      if (result.isSuccess) {
+        router.go(Page.messenger)
+      } else {
+        showNotification(result.error)
+      }
     }
 
     Object.values(FormInputs).forEach((input) => {

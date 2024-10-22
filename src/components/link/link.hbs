@@ -1,1 +1,5 @@
+{{#if href}}
 <a class="link {{#if isAlert}}alert{{/if}}" href="{{href}}">{{text}}</a>
+{{else}}
+<div class="link {{#if isAlert}}alert{{/if}}" >{{text}}</div>
+{{/if}}

@@ -4,10 +4,13 @@ import { IChatItem } from "../../pages";
 import { MessageInput } from "./message-input";
 import { MessageItem } from "./message-item";
 import { validateMessage } from "../../utils/validation";
+import { store, StoreEvents } from "../../utils/store";
+import { Dropdown } from "./dropdown";
 
 export interface ChatBodyProps extends BasicBlockProps {
   _id: string;
-  chat: IChatItem;
+  chat: IChatItem | null;
+  whenSendMessage: (message: string) => void
 }
 
 export class ChatBody extends Block<ChatBodyProps> {
@@ -16,6 +19,7 @@ export class ChatBody extends Block<ChatBodyProps> {
   constructor(props: ChatBodyProps) {
     super({
       ...props,
+      Dropdown: new Dropdown(),
       MessageInput: new MessageInput({
         _id: "MessageInput",
         value: "",
@@ -25,32 +29,40 @@ export class ChatBody extends Block<ChatBodyProps> {
           change: (e: Event) => this.changeMessage(e),
         },
       }),
-      MessageList: props.chat.messages.map(
+      MessageList: []
+    });
+
+    store.on(StoreEvents.Updated, () => {
+      const chat = {
+        id: store.getState().chat.activeChat?.chatTitle,
+        unreadCount: 0,
+        chatName: store.getState().chat.activeChat?.chatTitle,
+        chatUsers: (store.getState().chat.activeChat?.chatUsers ?? []).map((user) => user.display_name ?? user.login).join(', '),
+        messages: (store.getState().chat.activeChat?.messages ?? []).map((message) => ({
+          isSelf: message.user_id === store.getState().profile.profileData.id,
+          time: message.time,
+          text: message.content,
+          user: store.getState().chat.activeChat?.chatUsers?.find((user) => user.id === message.user_id)?.display_name ?? store.getState().chat.activeChat?.chatUsers?.find((user) => user.id === message.user_id)?.login
+        }))
+      } as unknown as IChatItem
+
+      const messagesNodes = chat?.messages.map(
         (messageItem, index) =>
           new MessageItem({
             _id: `MessageItem${index}`,
             message: messageItem,
           }),
-      ),
-    });
-  }
+      )
 
-  updateChatBody(newChat: IChatItem) {
-    const newMessagesNodes = newChat.messages.map(
-      (messageItem, index) => new MessageItem({
-        _id: `MessageItem${index}`,
-        message: messageItem,
-        error: '',
+      this.updateLists('MessageList', messagesNodes as unknown as Block<BasicBlockProps>[])
+
+      this.setProps({
+        ...this.props,
+        _id: 'ChatBody',
+        chat,
       })
-    ) as unknown as Block<BasicBlockProps>[]
-
-    this.updateLists("MessageList", newMessagesNodes);
-
-    this.setProps({
-      ...this.props,
-      _id: "ChatBody",
-      chat: newChat,
     });
+
   }
 
   changeMessage(e: Event) {
@@ -63,16 +75,16 @@ export class ChatBody extends Block<ChatBodyProps> {
     e.preventDefault();
     const error = validateMessage(this.message);
 
-    if (!error) {
-      console.log(`SendMessage ${this.message}`);
-    }
-
     this.childrenNodes.MessageInput.setProps({
       ...this.childrenNodes.MessageInput.props,
       _id: this.childrenNodes.MessageInput.props._id as string,
       error,
       value: this.message,
     });
+
+    if (!error) {
+      this.props.whenSendMessage(this.message)
+    }
   }
 
   render() {

@@ -1,14 +1,19 @@
 <div class="chat-body">
   <div class="header">
     <div class="avatar-wrapper"></div>
-    <div>{{chat.chatName}}</div>
-    <div class="button-wrapper">
-      <button class="button"><img
-          src="./context.svg"
-          alt="context menu"
-        /></button>
-    </div>
+    <div>{{chat.chatName}}
+      {{#if chat.chatName}}
+        <div class="subtitle">
+          Участники:
+          {{chat.chatUsers}}
+        </div>
+      {{/if}}</div>
+    {{#if chat.chatName}}
+      {{{Dropdown}}}
+    {{/if}}
   </div>
-  <div class="message-list">{{{MessageList}}}</div>
-  <div>{{{MessageInput}}}</div>
+  {{#if chat.chatName}}
+    <div class="message-list">{{{MessageList}}}</div>
+    <div>{{{MessageInput}}}</div>
+  {{/if}}
 </div>
