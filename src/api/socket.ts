@@ -59,9 +59,9 @@ export class ChatWebsocket {
         }
 
         if (Array.isArray(response)) {
-            store.set('chat.activeChat.messages', response)
+            store.set('chat.activeChat.messages', response.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()))
         } else {
-            const newMessages = [...(store.getState().chat.activeChat?.messages ?? []), response].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+            const newMessages = [...(store.getState().chat.activeChat?.messages ?? []), response]
             store.set('chat.activeChat.messages', newMessages)
         }
     }
