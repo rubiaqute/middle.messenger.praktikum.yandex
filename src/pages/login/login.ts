@@ -2,6 +2,9 @@ import { BasicBlockProps, Block } from "../../components/common/block";
 import LoginPageTemplate from "./login.hbs?raw";
 import { Button, FormInput, Link } from "../../components";
 import { validateLogin, validatePassword } from "../../utils/validation";
+import { UserController } from "../../controllers/user-controller";
+import { Page, router } from "../../app";
+import { showNotification } from "../../utils/helpers";
 
 enum FormInputs {
   FormInputLogin = "FormInputLogin",
@@ -10,7 +13,9 @@ enum FormInputs {
 
 type LoginPageForm = Record<FormInputs, string>;
 
-class LoginPage extends Block<BasicBlockProps> {
+export class LoginPage extends Block<BasicBlockProps> {
+  userController = new UserController()
+
   formValues: LoginPageForm = {
     [FormInputs.FormInputLogin]: "",
     [FormInputs.FormInputPassword]: "",
@@ -45,7 +50,9 @@ class LoginPage extends Block<BasicBlockProps> {
       }),
       Link: new Link({
         _id: "Link",
-        href: "/registration",
+        events: {
+          click: () => router.go(Page.signUp)
+        },
         text: "Нет аккаунта?",
       }),
       Button: new Button({
@@ -74,7 +81,7 @@ class LoginPage extends Block<BasicBlockProps> {
     });
   }
 
-  submitForm(e: Event): void {
+  async submitForm(e: Event): Promise<void> {
     e.preventDefault();
 
     const errors = {
@@ -87,7 +94,16 @@ class LoginPage extends Block<BasicBlockProps> {
     };
 
     if (Object.values(errors).every((value) => value === "")) {
-      console.log(this.formValues);
+      const result = await this.userController.signIn({
+        login: this.formValues.FormInputLogin,
+        password: this.formValues.FormInputPassword
+      })
+
+      if (result.isSuccess) {
+        router.go(Page.messenger)
+      } else {
+        showNotification(result.error)
+      }
     }
 
     Object.values(FormInputs).forEach((input) => {

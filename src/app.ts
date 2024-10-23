@@ -1,142 +1,90 @@
 import "./pages/error/error.pcss";
 
-import { profileData } from "./mock";
 import {
-  chatPage,
-  ErrorPage,
-  ErrorPageProps,
-  loginPage,
-  ProfilePage,
-  ProfilePageProps,
-  registrationPage,
+  ChatPage,
+  ErrorNotFoundPage,
+  ErrorServerPage,
+  LoginPage,
+  ProfileChangePasswordPage,
+  ProfileEditPage,
+  ProfileSettingsPage,
+  RegistrationPage,
 } from "./pages";
-import { renderInDom } from "./utils/helpers";
-import { BasicBlockProps } from "./components/common/block";
 
-enum Page {
-  login = "login",
-  registration = "registration",
-  profile = "profile",
-  chat = "chat",
-  notFoundError = "404",
-  serverError = "500",
-  profileEdit = "profile-edit",
-  profilePassword = "profile-password",
+import { BasicBlockProps, Block } from "./components/common/block";
+import { Router } from "./utils/router";
+import { connect, store } from "./utils/store";
+import { ProfileData } from "./pages/profile/utils";
+import { UserController } from "./controllers/user-controller";
+import { ChatController } from "./controllers/chat-controller";
+
+export enum Page {
+  login = "/",
+  signUp = "/sign-up",
+  settings = "/settings",
+  messenger = "/messenger",
+  notFoundError = "/404",
+  serverError = "/500",
+  profileEdit = "/profile-edit",
+  profilePassword = "/profile-password",
 }
 
+export const router = new Router('app');
+
 export default class App {
-  private currentPage = Page.login;
-  private appElement: HTMLElement | null;
+  userController = new UserController()
+  chatContoller = new ChatController()
 
   constructor() {
-    this.appElement = document.getElementById("app");
+    this.initApp()
   }
 
-  private updateCurrentPage(urlPath?: string) {
-    const path = urlPath?.replace("/", "");
+  initApp() {
+    this.initRouter()
+    this.initPathGuard()
+  }
 
-    if (!path) {
-      this.currentPage = Page.login;
-    } else {
-      this.currentPage = Object.values(Page).includes(path as Page)
-        ? (path as Page)
-        : Page.notFoundError;
+  initRouter() {
+    const profileSettingsPage = connect<ProfileData>(ProfileSettingsPage as unknown as typeof Block<BasicBlockProps>, (state) => state.profile.profileData)
+    const profileChangePasswordPage = connect<ProfileData>(ProfileChangePasswordPage as unknown as typeof Block<BasicBlockProps>, (state) => state.profile.profileData)
+
+    router
+      .use(Page.login, LoginPage)
+      .use(Page.signUp, RegistrationPage)
+      .use(Page.messenger, ChatPage)
+      .use(Page.settings, profileSettingsPage)
+      .use(Page.profileEdit, ProfileEditPage as unknown as typeof Block<BasicBlockProps>)
+      .use(Page.profilePassword, profileChangePasswordPage)
+      .use(Page.notFoundError, ErrorNotFoundPage as unknown as typeof Block<BasicBlockProps>)
+      .use(Page.serverError, ErrorServerPage as unknown as typeof Block<BasicBlockProps>)
+      .start();
+  }
+
+  async initPathGuard() {
+    if (!Object.values(Page).includes(router.currentPath as Page)) {
+      router.go(Page.notFoundError)
     }
-  }
 
-  render(urlPath?: string) {
-    if (this.appElement) {
-      this.updateCurrentPage(urlPath);
-      this.appElement.innerHTML = "";
+    if (router.currentPath === Page.login || router.currentPath === Page.signUp) {
+      const isSuccess = await this.userController.getUserInfo()
 
-      switch (this.currentPage) {
-        case Page.login: {
-          renderInDom<BasicBlockProps>(".app", loginPage);
-          break;
-        }
-        case Page.notFoundError: {
-          const page = new ErrorPage({
-            title: "404",
-            subTitle: "Не туда попали",
-          });
+      if (isSuccess) {
+        router.go(Page.messenger)
+      }
+    }
 
-          if (page) {
-            renderInDom<ErrorPageProps>(".app", page);
-          }
-          break;
-        }
-        case Page.serverError: {
-          const page = new ErrorPage({
-            title: "500",
-            subTitle: "Мы уже фиксим",
-          });
+    if ([Page.settings, Page.profileEdit, Page.messenger, Page.profilePassword].some((path) => path === router.currentPath)) {
+      if (!store.getState().profile.profileData.id) {
+        const isSuccess = await this.userController.getUserInfo()
 
-          if (page) {
-            renderInDom<ErrorPageProps>(".app", page);
-          }
-          break;
-        }
-        case Page.registration: {
-          renderInDom<BasicBlockProps>(".app", registrationPage);
-          break;
-        }
-        case Page.chat: {
-          renderInDom<BasicBlockProps>(".app", chatPage);
-          break;
-        }
-        case Page.profile: {
-          const page = new ProfilePage({
-            profileData,
-            pageMode: "basic",
-          });
-
-          renderInDom<ProfilePageProps>(".app", page);
-          break;
-        }
-        case Page.profileEdit: {
-          const page = new ProfilePage({
-            profileData,
-            pageMode: "edit",
-          });
-
-          renderInDom<ProfilePageProps>(".app", page);
-          break;
-        }
-        case Page.profilePassword: {
-          const page = new ProfilePage({
-            profileData,
-            pageMode: "changePassword",
-          });
-
-          renderInDom<ProfilePageProps>(".app", page);
-          break;
+        if (!isSuccess) {
+          router.go(Page.login)
         }
       }
-
-      this.attachEventListeners();
     }
   }
 
-  private attachEventListeners() {
-    const formLogin = document.querySelector("#formLogin");
-    formLogin?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      console.log("Send login");
-      window.location.pathname = `/${Page.chat}`;
-    });
-
-    const formRegistration = document.querySelector("#formRegistration");
-    formRegistration?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      console.log("Send registration");
-      window.location.pathname = `/${Page.login}`;
-    });
-
-    const formProfile = document.querySelector("#formProfile");
-    formProfile?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      console.log("Save profile");
-      window.location.pathname = `/${Page.profile}`;
-    });
+  render() {
+    return ''
   }
 }

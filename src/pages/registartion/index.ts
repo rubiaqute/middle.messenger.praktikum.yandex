@@ -1,2 +1,2 @@
 import "./registration.pcss";
-export { registrationPage } from "./registration";
+export { RegistrationPage } from "./registration";

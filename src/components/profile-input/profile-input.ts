@@ -13,7 +13,7 @@ interface ProfileInputProps extends Record<string, unknown> {
 }
 
 export class ProfileInput extends Input<ProfileInputProps> {
-  
+
   render() {
     return ProfileInputTemplate;
   }

@@ -5,13 +5,14 @@ enum METHODS {
     DELETE = 'DELETE'
 };
 
-type FetchData = Record<string, unknown>
+export type FetchData = Record<string, unknown>
 
 type FetchOptions = {
     method?: METHODS,
-    data?: FetchData,
+    data?: FetchData | FormData,
     headers?: Record<string, string>
     timeout?: number
+    contentType?: string
 }
 
 type FetchMethod = (url: string, options?: FetchOptions, timeout?: number) => Promise<unknown>
@@ -28,8 +29,10 @@ function queryStringify(data: FetchData) {
     }, '?');
 }
 
+export const BASE_URL = 'https://ya-praktikum.tech/api/v2'
+
 export class HTTPTransport {
-    get: FetchMethod = (url: string, options = {}) => {
+    get: FetchMethod = (url, options = {}) => {
         return this.request(url, { ...options, method: METHODS.GET }, options.timeout)
     }
 
@@ -59,14 +62,26 @@ export class HTTPTransport {
             xhr.open(
                 method,
                 method === METHODS.GET && Boolean(data)
-                    ? `${url}${queryStringify(data ?? {})}`
-                    : url,
+                    ? `${BASE_URL}${url}${queryStringify(data as FetchData ?? {})}`
+                    : `${BASE_URL}${url}`,
             );
+            if (data instanceof FormData) {
+                xhr.setRequestHeader('Accept', 'application/json');
+            } else {
+                xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            }
+
+            xhr.withCredentials = true;
+            xhr.responseType = 'json';
 
             Object.entries(headers).forEach(([key, value]) => xhr.setRequestHeader(key, value))
 
             xhr.onload = function () {
-                resolve(xhr);
+                if (xhr.status !== 200) {
+                    reject(xhr);
+                } else {
+                    resolve(xhr);
+                }
             };
 
             xhr.onabort = reject;
@@ -78,8 +93,10 @@ export class HTTPTransport {
             if (method === METHODS.GET || !data) {
                 xhr.send();
             } else {
-                xhr.send(JSON.stringify(data));
+                xhr.send(data instanceof FormData ? data : JSON.stringify(data));
             }
+
+
         });
     };
 }

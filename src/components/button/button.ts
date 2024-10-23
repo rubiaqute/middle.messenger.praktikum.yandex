@@ -1,9 +1,11 @@
 import ButtonTemplate from "./button.hbs?raw";
-import { Block } from "../common/block";
+import { Block, Events } from "../common/block";
 
 interface ButtonProps extends Record<string, unknown> {
   buttonId: string;
   text: string;
+  events?: Events
+  isDisabled?: boolean
 }
 
 export class Button extends Block<ButtonProps> {

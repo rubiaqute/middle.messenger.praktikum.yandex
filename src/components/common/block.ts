@@ -12,16 +12,17 @@ type ChildProps = BasicBlockProps & {
 }
 type Children = Block<ChildProps>
 
-export abstract class Block<Props extends BasicBlockProps> {
+export class Block<Props extends BasicBlockProps> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
     FLOW_RENDER: "flow:render",
     UPDATE: "flow:component-did-update",
+    UNMOUNT: "flow:component-did-unmount",
   };
 
   private children: Record<string, Children> = {};
-  private lists: Record<string, Block<BasicBlockProps>[]> = {};
+  lists: Record<string, Block<BasicBlockProps>[]> = {};
 
   private _element: HTMLElement | null = null;
   private _meta: Partial<{
@@ -54,6 +55,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
     eventBus.on(Block.EVENTS.UPDATE, this._componentDidUpdate.bind(this));
+    eventBus.on(Block.EVENTS.UNMOUNT, this._componentDidUnmount.bind(this));
   }
 
   private _addEvents() {
@@ -68,7 +70,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.addSpecificEvents();
   }
 
-  public addSpecificEvents() {}
+  public addSpecificEvents() { }
 
   private _removeEvents() {
     const events = (this.props.events ?? {}) as Events;
@@ -82,7 +84,7 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.removeSpecificEvents();
   }
 
-  public removeSpecificEvents() {}
+  public removeSpecificEvents() { }
 
   public getContent(): HTMLElement {
     if (!this._element) {
@@ -93,6 +95,10 @@ export abstract class Block<Props extends BasicBlockProps> {
 
   public dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
+  }
+
+  public dispatchComponentUnMount() {
+    this.eventBus().emit(Block.EVENTS.UNMOUNT);
   }
 
   public updateLists(key: string, newList: Block<BasicBlockProps>[]) {
@@ -116,7 +122,14 @@ export abstract class Block<Props extends BasicBlockProps> {
     this.componentDidMount();
   }
 
-  public componentDidMount() {}
+  private _componentDidUnmount() {
+    if (this.element) {
+      this._removeEvents();
+      this.element.innerHTML = "";
+    }
+  }
+
+  public componentDidMount() { }
 
   private _componentDidUpdate() {
     if (this.element) {
