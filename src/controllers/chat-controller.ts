@@ -118,6 +118,23 @@ export class ChatController {
         }
     }
 
+    async deleteUserFromChat(userId: number) {
+        try {
+            const activeChatId = store.getState().chat.activeChat?.chatId
+
+            if (activeChatId) {
+                await this.chatApi.deleteUserFromChat(activeChatId, userId)
+
+                const newUsers = await this.getChartUsers(activeChatId)
+                store.set('chat.activeChat.chatUsers', newUsers)
+            }
+
+            return true
+        } catch {
+            return false
+        }
+    }
+
     async loadChatAvatar(formData: FormData) {
         try {
             await this.chatApi.loadChatsAvatar(formData)
