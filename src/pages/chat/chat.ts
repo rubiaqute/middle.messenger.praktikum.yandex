@@ -21,9 +21,7 @@ export class ChatPage extends Block<BasicBlockProps> {
       }),
     });
 
-    if (store.getState().chat.chatsList.length === 0) {
-      this.getChats()
-    }
+    this.getChats()
 
   }
 
@@ -36,15 +34,18 @@ export class ChatPage extends Block<BasicBlockProps> {
   }
 
   async changeActiveChat(chatId: number) {
-    this.chatContoller.closeChat()
-    const chatList = store.getState().chat.chatsList
-    const newActiveChat =
-      chatList.find((chatItem) => chatItem.id === chatId) ?? null;
+    if (chatId !== store.getState().chat.activeChat?.chatId) {
+      this.chatContoller.closeChat()
+      const chatList = store.getState().chat.chatsList
+      const newActiveChat =
+        chatList.find((chatItem) => chatItem.id === chatId) ?? null;
 
-    if (newActiveChat?.id) {
-      this.updateActiveChat(newActiveChat.title, newActiveChat.id)
-      await this.chatContoller.openChat(String(newActiveChat.id))
+      if (newActiveChat?.id) {
+        this.updateActiveChat(newActiveChat.title, newActiveChat.id)
+        await this.chatContoller.openChat(String(newActiveChat.id))
+      }
     }
+
   }
 
   async updateActiveChat(chatTitle: string, chatId: number) {

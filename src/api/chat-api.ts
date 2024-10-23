@@ -34,4 +34,20 @@ export class ChatApi extends BaseAPI {
             }
         });
     }
+
+    deleteUserFromChat(chatId: number, userId: number) {
+        return chatApiInstance.delete(`${urlBase}/users`, {
+            data: {
+                users: [userId],
+                chatId
+            }
+        });
+    }
+
+    loadChatsAvatar(payload: FormData) {
+        return chatApiInstance.put(`${urlBase}/avatar`, {
+            data: payload,
+            contentType: 'multipart/form-data'
+        });
+    }
 }

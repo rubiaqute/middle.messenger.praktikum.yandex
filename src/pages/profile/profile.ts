@@ -45,9 +45,15 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
   constructor(props: ProfilePageProps) {
     super({
-      SidePanel: new SidePanel({ _id: "SidePanel" }),
-      Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: `${BASE_URL}/Resources/${state.profile.profileData.avatar}` })) as unknown as typeof Avatar)({
+      SidePanel: new SidePanel({
+        _id: "SidePanel",
+        events: {
+          click: () => router.go(Page.messenger)
+        }
+      }),
+      Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: state.profile.profileData.avatar ? `${BASE_URL}/Resources/${state.profile.profileData.avatar}` : './union.svg' })) as unknown as typeof Avatar)({
         _id: "Avatar",
+        avatarId: "profileAvatar",
         avatarUrl: './union.svg',
         events: {
           change: (e) => this.changeAvatar(e)
@@ -86,12 +92,16 @@ export class ProfilePage extends Block<ProfilePageProps> {
       }),
       LinkChangeData: new Link({
         _id: "LinkChangeData",
-        href: "/profile-edit",
+        events: {
+          click: () => router.go(Page.profileEdit)
+        },
         text: "Изменить данные",
       }),
       LinkChangePassword: new Link({
         _id: "LinkChangePassword",
-        href: "/profile-password",
+        events: {
+          click: () => router.go(Page.profilePassword)
+        },
         text: "Изменить пароль",
       }),
       LinkExit: new Link({
@@ -319,6 +329,15 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
     if (isSucces) {
       router.go(Page.login)
+      store.set('profile.profileData', {
+        first_name: '',
+        second_name: '',
+        display_name: null,
+        login: '',
+        avatar: null,
+        email: '',
+        phone: ''
+      })
     }
   }
 
@@ -332,31 +351,37 @@ export class ProfileEditPage extends ProfilePage {
       profileData,
     })
 
+    this.updateInputs(store.getState().profile.profileData)
+
     store.on(StoreEvents.Updated, () => {
       this.setProps({ ...this.props, profileData: store.getState().profile.profileData } as ProfilePageProps);
 
-      this.editFormValues = {
-        [ProfileInputs.ProfileInputEmail]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputEmail)],
-        [ProfileInputs.ProfileInputLogin]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
-        [ProfileInputs.ProfileInputFirstName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputFirstName)
-          ],
-        [ProfileInputs.ProfileInputSecondName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputSecondName)
-          ],
-        [ProfileInputs.ProfileInputDisplayName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
-          ],
-        [ProfileInputs.ProfileInputPhone]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
-      } as EditProfileForm;
+      this.updateInputs(store.getState().profile.profileData)
     });
 
+  }
+
+  updateInputs(profileData: ProfileData) {
+    this.editFormValues = {
+      [ProfileInputs.ProfileInputEmail]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputEmail)],
+      [ProfileInputs.ProfileInputLogin]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
+      [ProfileInputs.ProfileInputFirstName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputFirstName)
+        ],
+      [ProfileInputs.ProfileInputSecondName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputSecondName)
+        ],
+      [ProfileInputs.ProfileInputDisplayName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
+        ],
+      [ProfileInputs.ProfileInputPhone]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
+    } as EditProfileForm;
   }
 }
 

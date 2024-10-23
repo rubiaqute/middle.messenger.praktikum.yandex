@@ -4,8 +4,11 @@ import { IChatItem } from "../../pages";
 import { MessageInput } from "./message-input";
 import { MessageItem } from "./message-item";
 import { validateMessage } from "../../utils/validation";
-import { store, StoreEvents } from "../../utils/store";
+import { connect, store, StoreEvents } from "../../utils/store";
 import { Dropdown } from "./dropdown";
+import { Avatar } from "../avatar";
+import { BASE_URL } from "../../api/api-service";
+import { ChatController } from "../../controllers/chat-controller";
 
 export interface ChatBodyProps extends BasicBlockProps {
   _id: string;
@@ -15,6 +18,7 @@ export interface ChatBodyProps extends BasicBlockProps {
 
 export class ChatBody extends Block<ChatBodyProps> {
   message: string = "";
+  chatController = new ChatController()
 
   constructor(props: ChatBodyProps) {
     super({
@@ -29,7 +33,19 @@ export class ChatBody extends Block<ChatBodyProps> {
           change: (e: Event) => this.changeMessage(e),
         },
       }),
-      MessageList: []
+      MessageList: [],
+      Avatar: new (connect(Avatar as typeof Block, state => {
+        const avatarPartUrl = state.chat.chatsList.find((chat) => chat.id === state.chat.activeChat?.chatId)?.avatar
+        return { avatarUrl: avatarPartUrl ? `${BASE_URL}/Resources/${avatarPartUrl}` : './union.svg' }
+      }) as unknown as typeof Avatar)({
+        _id: "AvatarChat",
+        avatarId: "chatAvatar",
+        avatarUrl: './union.svg',
+        events: {
+          change: (e) => this.changeChatAvatar(e),
+        },
+        isSmall: true,
+      }),
     });
 
     store.on(StoreEvents.Updated, () => {
@@ -70,6 +86,20 @@ export class ChatBody extends Block<ChatBodyProps> {
       this.message = e.target.value;
     }
   }
+
+  async changeChatAvatar(e: Event) {
+    const file = (e.target as HTMLInputElement).files?.[0]
+
+    if (file) {
+      const activeChatId = store.getState().chat.activeChat?.chatId
+      const payload = new FormData()
+      payload.append('chatId', String(activeChatId))
+      payload.append('avatar', file)
+
+      await this.chatController.loadChatAvatar(payload)
+    }
+  }
+
 
   sendMessage(e: Event): void {
     e.preventDefault();

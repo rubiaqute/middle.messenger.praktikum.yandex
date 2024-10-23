@@ -3,6 +3,7 @@ import { deleteFromDom, renderInDom } from "../../../utils/helpers";
 import { store } from "../../../utils/store";
 import { BasicBlockProps, Block } from "../../common/block";
 import { AddUserModal } from "../add-user-modal";
+import { DeleteUserModal } from "../delete-user-modal";
 import { DropdownContentItem } from "../dropdown-content-item";
 import DropdownTemplate from "./dropdown.hbs?raw";
 
@@ -23,6 +24,12 @@ export class Dropdown extends Block<BasicBlockProps> {
           click: () => this.deleteChat()
         }
       }),
+      DropdownDeleteUser: new DropdownContentItem({
+        text: "Удалить пользователя",
+        events: {
+          click: () => this.clickDeleteUser()
+        }
+      }),
     })
   }
 
@@ -40,6 +47,14 @@ export class Dropdown extends Block<BasicBlockProps> {
 
   clickAddUser() {
     const modal = new AddUserModal({
+      whenClose: () => deleteFromDom('.app', modal)
+    })
+
+    renderInDom('.app', modal)
+  }
+
+  clickDeleteUser() {
+    const modal = new DeleteUserModal({
       whenClose: () => deleteFromDom('.app', modal)
     })
 

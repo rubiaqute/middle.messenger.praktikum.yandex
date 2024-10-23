@@ -50,11 +50,9 @@ export class Route {
     }
 
     render() {
-        if (!this._block) {
-            this._block = new this._blockClass({});
-            render(this._props.rootQuery as string, this._block);
-            return;
-        }
+        this._block = new this._blockClass({});
+        render(this._props.rootQuery as string, this._block);
+        return;
     }
 }
 

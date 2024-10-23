@@ -38,86 +38,115 @@ export class UserController {
     resourcesApi = new ResourcesApi()
 
     async signUp(profileData: UserCreate) {
-        const response = await this.authApi.signUp(profileData)
+        try {
+            await this.authApi.signUp(profileData)
 
-        return {
-            isSuccess: (response as Response).status === 200,
-            error: `Не удалось зарегистрироваться ${JSON.stringify((response as { response: string }).response ?? '')}`
+            return {
+                isSuccess: true,
+                error: ''
+            }
+        } catch (e) {
+            return {
+                isSuccess: false,
+                error: `Не удалось зарегистрироваться ${JSON.stringify((e as { response: { reason: string } }).response?.reason ?? '')}`
+            }
         }
     }
 
     async getUserInfo() {
-        const result = await this.authApi.getInfo() as Response
-        const info = (result as unknown as { response: string }).response
-        const isSuccess = result.status === 200
+        try {
+            const result = await this.authApi.getInfo() as Response
+            const info = (result as unknown as { response: string }).response
 
-        if (info && isSuccess) {
             store.set('profile.profileData', info)
-        }
 
-        return isSuccess
+            return true
+        } catch {
+            return false
+        }
     }
 
     async signIn(payload: UserLogin) {
-        const response = await this.authApi.signIn(payload)
-
-        const reason = (response as { response: { reason: string } })?.response?.reason ?? ''
-        const isAuthorised = (response as Response).status === 200 || ((response as Response).status === 400 && reason === "User already in system")
+        try {
+            await this.authApi.signIn(payload)
 
 
-        if (isAuthorised) {
+
             this.getUserInfo()
-        }
 
-        return {
-            isSuccess: isAuthorised,
-            error: `Не удалось авторизоваться ${(response as { response: { reason: string } }).response?.reason ?? ''}`
+            return {
+                isSuccess: true,
+                error: ""
+            }
+        } catch (e) {
+            const reason = (e as { response: { reason: string } })?.response?.reason ?? ''
+            const isAlreadyAuthorised = (e as Response).status === 400 && reason === "User already in system"
+
+            return {
+                isSuccess: isAlreadyAuthorised,
+                error: isAlreadyAuthorised ? '' : `Не удалось авторизоваться ${reason}`
+            }
         }
     }
 
     async changeProfile(payload: UserChange) {
-        const response = await this.userApi.changeProfile(payload)
-
-        if ((response as Response).status === 200) {
+        try {
+            await this.userApi.changeProfile(payload)
             this.getUserInfo()
-        }
 
-        return {
-            isSuccess: (response as Response).status === 200,
-            error: `Не удалось сохранить данные ${(response as { response: { reason: string } }).response?.reason ?? ''}`
+            return {
+                isSuccess: true,
+                error: ""
+            }
+        } catch (e) {
+            return {
+                isSuccess: false,
+                error: `Не удалось сохранить данные ${(e as { response: { reason: string } }).response?.reason ?? ''}`
+            }
         }
     }
 
     async changePassword(payload: UserChangePassword) {
-        const response = await this.userApi.changePassword(payload)
+        try {
+            await this.userApi.changePassword(payload)
 
-        return {
-            isSuccess: (response as Response).status === 200,
-            error: `Не удалось изменить пароль ${(response as { response: { reason: string } }).response?.reason ?? ''}`
+            return {
+                isSuccess: true,
+                error: ""
+            }
+        } catch (e) {
+            return {
+                isSuccess: false,
+                error: `Не удалось изменить пароль ${(e as { response: { reason: string } }).response?.reason ?? ''}`
+            }
         }
     }
 
     async changeAvatar(formData: FormData) {
-        const response = await this.userApi.changeAvatar(formData)
-
-        if ((response as Response).status === 200) {
+        try {
+            await this.userApi.changeAvatar(formData)
             this.getUserInfo()
-        }
 
-        return {
-            isSuccess: (response as Response).status === 200,
-            error: `Не удалось изменить пароль ${(response as { response: { reason: string } }).response?.reason ?? ''}`
+            return {
+                isSuccess: true,
+                error: ""
+            }
+        } catch (e) {
+            return {
+                isSuccess: false,
+                error: `Не удалось изменить пароль ${(e as { response: { reason: string } }).response?.reason ?? ''}`
+            }
         }
     }
 
     async logout() {
-        const response = await this.authApi.logout()
-        const isSucces = (response as Response).status === 200
+        try {
+            await this.authApi.logout()
 
-        if (isSucces) {
-            store.set('profile.profileData', {})
+            return true
+        } catch (e) {
+            console.log(e)
+            return false
         }
-
-        return isSucces
     }
 }

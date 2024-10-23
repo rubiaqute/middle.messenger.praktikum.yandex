@@ -1,10 +1,13 @@
-<form class="form-avatar" action="submit" id="avatarForm">
+<form class="form-avatar {{#if isSmall}}form-avatar-small{{/if}}" action="submit" id="avatarForm">
   <img class="avatar" src="{{avatarUrl}}" alt="avatar" />
   <input
-    id="file-input"
+    id="{{avatarId}}"
     type="file"
     name="avatar"
     accept=".jpeg, .jpg, .png, .gif"
   />
-  <label for="file-input" class="hovered-content">Поменять аватар</label>
+  {{#if isStatic}}
+  {{else}}
+  <label for="{{avatarId}}" class="hovered-content">Поменять аватар</label>
+  {{/if}}
 </form>

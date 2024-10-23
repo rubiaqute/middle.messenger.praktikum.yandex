@@ -50,7 +50,9 @@ export class LoginPage extends Block<BasicBlockProps> {
       }),
       Link: new Link({
         _id: "Link",
-        href: "/sign-up",
+        events: {
+          click: () => router.go(Page.signUp)
+        },
         text: "Нет аккаунта?",
       }),
       Button: new Button({

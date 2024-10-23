@@ -52,7 +52,9 @@ export class RegistrationPage extends Block<BasicBlockProps> {
       ),
       Link: new Link({
         _id: "Link",
-        href: "/",
+        events: {
+          click: () => router.go(Page.login)
+        },
         text: "Войти",
       }),
       Button: new Button({

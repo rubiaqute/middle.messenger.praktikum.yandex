@@ -77,7 +77,11 @@ export class HTTPTransport {
             Object.entries(headers).forEach(([key, value]) => xhr.setRequestHeader(key, value))
 
             xhr.onload = function () {
-                resolve(xhr);
+                if (xhr.status !== 200) {
+                    reject(xhr);
+                } else {
+                    resolve(xhr);
+                }
             };
 
             xhr.onabort = reject;

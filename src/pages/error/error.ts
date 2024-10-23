@@ -1,6 +1,7 @@
 import { Block } from "../../components/common/block";
 import ErrorPageTemplate from "./error.hbs?raw";
 import { Link } from "../../components";
+import { Page, router } from "../../app";
 
 export interface ErrorPageProps extends Record<string, unknown> {
   title: string;
@@ -13,7 +14,9 @@ class ErrorPage extends Block<ErrorPageProps> {
       ...props,
       Link: new Link({
         _id: "Link",
-        href: "/chat",
+        events: {
+          click: () => router.go(Page.messenger)
+        },
         text: "Назад к чатам",
       }),
     });

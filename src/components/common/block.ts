@@ -22,7 +22,7 @@ export class Block<Props extends BasicBlockProps> {
   };
 
   private children: Record<string, Children> = {};
-  private lists: Record<string, Block<BasicBlockProps>[]> = {};
+  lists: Record<string, Block<BasicBlockProps>[]> = {};
 
   private _element: HTMLElement | null = null;
   private _meta: Partial<{
