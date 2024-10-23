@@ -44,7 +44,7 @@ export class ChatList extends Block<ChatListProps> {
           change: (e: Event) => this.search(e),
         },
       }),
-      ChatList: []
+      ChatColumnList: []
     });
 
     store.on(StoreEvents.Updated, () => {
@@ -58,6 +58,7 @@ export class ChatList extends Block<ChatListProps> {
               time: chatItem?.last_message?.time,
               text: chatItem?.last_message?.content
             },
+            avatar: chatItem.avatar,
             id: chatItem.id,
             name: chatItem.title,
             unreadCount: chatItem.unread_count,

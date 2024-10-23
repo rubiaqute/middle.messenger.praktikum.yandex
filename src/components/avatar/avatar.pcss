@@ -1,3 +1,5 @@
+@import url("./../../styles/mixins.pcss");
+
 .form-avatar {
   position: relative;
   margin: auto;
@@ -44,5 +46,17 @@
 
   .avatar {
     display: block;
+  }
+}
+
+.form-avatar-small {
+  width: 37px;
+  height: 37px;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hovered-content {
+    @mixin text-font 7px;
+
+    text-align: center;
   }
 }

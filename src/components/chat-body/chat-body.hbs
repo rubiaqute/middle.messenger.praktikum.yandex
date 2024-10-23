@@ -1,6 +1,8 @@
 <div class="chat-body">
   <div class="header">
-    <div class="avatar-wrapper"></div>
+    {{#if chat.chatName}}
+      {{{Avatar}}}
+    {{/if}}
     <div>{{chat.chatName}}
       {{#if chat.chatName}}
         <div class="subtitle">

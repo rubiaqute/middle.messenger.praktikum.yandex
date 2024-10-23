@@ -51,8 +51,9 @@ export class ProfilePage extends Block<ProfilePageProps> {
           click: () => router.go(Page.messenger)
         }
       }),
-      Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: `${BASE_URL}/Resources/${state.profile.profileData.avatar}` })) as unknown as typeof Avatar)({
+      Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: state.profile.profileData.avatar ? `${BASE_URL}/Resources/${state.profile.profileData.avatar}` : './union.svg' })) as unknown as typeof Avatar)({
         _id: "Avatar",
+        avatarId: "profileAvatar",
         avatarUrl: './union.svg',
         events: {
           change: (e) => this.changeAvatar(e)
@@ -328,6 +329,15 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
     if (isSucces) {
       router.go(Page.login)
+      store.set('profile.profileData', {
+        first_name: '',
+        second_name: '',
+        display_name: null,
+        login: '',
+        avatar: null,
+        email: '',
+        phone: ''
+      })
     }
   }
 
@@ -341,12 +351,12 @@ export class ProfileEditPage extends ProfilePage {
       profileData,
     })
 
-    this.updateInputs(profileData)
+    this.updateInputs(store.getState().profile.profileData)
 
     store.on(StoreEvents.Updated, () => {
       this.setProps({ ...this.props, profileData: store.getState().profile.profileData } as ProfilePageProps);
 
-      this.updateInputs(this.props.profileData)
+      this.updateInputs(store.getState().profile.profileData)
     });
 
   }

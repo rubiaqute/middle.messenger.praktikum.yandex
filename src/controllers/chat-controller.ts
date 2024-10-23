@@ -16,60 +16,63 @@ export class ChatController {
     socket: ChatWebsocket | null = null
 
     async getChats() {
-        const result = await this.chatApi.getChats() as Response
-        const isSuccess = result.status === 200
-
-        if (isSuccess) {
+        try {
+            const result = await this.chatApi.getChats() as Response
             store.set('chat.chatsList', (result as unknown as { response: unknown }).response)
-        }
 
-        return isSuccess
+            return true
+        } catch {
+            return false
+        }
     }
 
     async createChat(title: string) {
-        const result = await this.chatApi.createChat(title) as Response
-        const isSuccess = result.status === 200
+        try {
+            await this.chatApi.createChat(title)
+            await this.getChats()
 
-        if (isSuccess) {
-            this.getChats()
+            return true
+        } catch {
+            return false
         }
-
-        return isSuccess
     }
 
     async deleteChat(chatId: number) {
-        const result = await this.chatApi.deleteChat(chatId) as Response
-        const isSuccess = result.status === 200
+        try {
+            await this.chatApi.deleteChat(chatId)
+            await this.getChats()
 
-        if (isSuccess) {
-            this.getChats()
+            return true
+        } catch {
+            return false
         }
-
-        return isSuccess
     }
 
     async getChartUsers(chatId: number) {
-        const result = await this.chatApi.getChartUsers(chatId) as Response
-        const isSuccess = result.status === 200
-        const chartUsers = isSuccess ? (result as unknown as { response: unknown }).response : []
+        try {
+            const result = await this.chatApi.getChartUsers(chatId) as { response: unknown }
 
-        return chartUsers
+            return result?.response ?? []
+        } catch {
+            return []
+        }
     }
 
     async openChat(chatId: string) {
-        const result = await this.chatApi.getToken(chatId) as Response
-        const isSuccess = result.status === 200
+        try {
+            const result = await this.chatApi.getToken(chatId) as { response: { token: string } }
 
-        if (isSuccess) {
-            store.set('chat.activeChatToken', (result as unknown as { response: { token: string } }).response.token)
+            store.set('chat.activeChatToken', result.response.token)
             this.socket = new ChatWebsocket({
                 userId: String(store.getState().profile.profileData.id),
                 chatId,
                 token: store.getState().chat.activeChatToken
             })
-        }
 
-        return isSuccess
+            return true
+        } catch {
+            return false
+        }
     }
 
     async sendMessage(message: string) {
@@ -89,28 +92,40 @@ export class ChatController {
     }
 
     async searchUsers(query: string) {
-        const result = await this.userApi.searchUsers(query) as Response
+        try {
+            const result = await this.userApi.searchUsers(query) as { response: unknown }
 
-        const isSuccess = result.status === 200
-        const searchedUsers = isSuccess ? (result as unknown as { response: unknown }).response : []
-
-        return searchedUsers
+            return result?.response ?? []
+        } catch {
+            return []
+        }
     }
 
     async addUserToChat(userId: number) {
-        const activeChatId = store.getState().chat.activeChat?.chatId
-        let isSuccess = false
+        try {
+            const activeChatId = store.getState().chat.activeChat?.chatId
 
-        if (activeChatId) {
-            const result = await this.chatApi.addUserToChat(activeChatId, userId) as Response
-            isSuccess = result.status === 200
+            if (activeChatId) {
+                await this.chatApi.addUserToChat(activeChatId, userId)
 
-
-            if (isSuccess) {
                 const newUsers = await this.getChartUsers(activeChatId)
                 store.set('chat.activeChat.chatUsers', newUsers)
             }
+
+            return true
+        } catch {
+            return false
         }
-        return isSuccess
+    }
+
+    async loadChatAvatar(formData: FormData) {
+        try {
+            await this.chatApi.loadChatsAvatar(formData)
+            this.getChats()
+
+            return true
+        } catch {
+            return false
+        }
     }
 }

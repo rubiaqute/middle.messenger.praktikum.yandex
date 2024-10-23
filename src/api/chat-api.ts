@@ -34,4 +34,11 @@ export class ChatApi extends BaseAPI {
             }
         });
     }
+
+    loadChatsAvatar(payload: FormData) {
+        return chatApiInstance.put(`${urlBase}/avatar`, {
+            data: payload,
+            contentType: 'multipart/form-data'
+        });
+    }
 }
