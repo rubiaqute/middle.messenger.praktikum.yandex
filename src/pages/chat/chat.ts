@@ -21,9 +21,7 @@ export class ChatPage extends Block<BasicBlockProps> {
       }),
     });
 
-    if (store.getState().chat.chatsList.length === 0) {
-      this.getChats()
-    }
+    this.getChats()
 
   }
 

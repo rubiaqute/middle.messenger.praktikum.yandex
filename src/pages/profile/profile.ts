@@ -45,7 +45,12 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
   constructor(props: ProfilePageProps) {
     super({
-      SidePanel: new SidePanel({ _id: "SidePanel" }),
+      SidePanel: new SidePanel({
+        _id: "SidePanel",
+        events: {
+          click: () => router.go(Page.messenger)
+        }
+      }),
       Avatar: new (connect(Avatar as typeof Block, state => ({ avatarUrl: `${BASE_URL}/Resources/${state.profile.profileData.avatar}` })) as unknown as typeof Avatar)({
         _id: "Avatar",
         avatarUrl: './union.svg',
@@ -86,12 +91,16 @@ export class ProfilePage extends Block<ProfilePageProps> {
       }),
       LinkChangeData: new Link({
         _id: "LinkChangeData",
-        href: "/profile-edit",
+        events: {
+          click: () => router.go(Page.profileEdit)
+        },
         text: "Изменить данные",
       }),
       LinkChangePassword: new Link({
         _id: "LinkChangePassword",
-        href: "/profile-password",
+        events: {
+          click: () => router.go(Page.profilePassword)
+        },
         text: "Изменить пароль",
       }),
       LinkExit: new Link({
@@ -332,31 +341,37 @@ export class ProfileEditPage extends ProfilePage {
       profileData,
     })
 
+    this.updateInputs(profileData)
+
     store.on(StoreEvents.Updated, () => {
       this.setProps({ ...this.props, profileData: store.getState().profile.profileData } as ProfilePageProps);
 
-      this.editFormValues = {
-        [ProfileInputs.ProfileInputEmail]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputEmail)],
-        [ProfileInputs.ProfileInputLogin]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
-        [ProfileInputs.ProfileInputFirstName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputFirstName)
-          ],
-        [ProfileInputs.ProfileInputSecondName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputSecondName)
-          ],
-        [ProfileInputs.ProfileInputDisplayName]:
-          this.props.profileData[
-          getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
-          ],
-        [ProfileInputs.ProfileInputPhone]:
-          this.props.profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
-      } as EditProfileForm;
+      this.updateInputs(this.props.profileData)
     });
 
+  }
+
+  updateInputs(profileData: ProfileData) {
+    this.editFormValues = {
+      [ProfileInputs.ProfileInputEmail]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputEmail)],
+      [ProfileInputs.ProfileInputLogin]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputLogin)],
+      [ProfileInputs.ProfileInputFirstName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputFirstName)
+        ],
+      [ProfileInputs.ProfileInputSecondName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputSecondName)
+        ],
+      [ProfileInputs.ProfileInputDisplayName]:
+        profileData[
+        getProfileInputKey(ProfileInputs.ProfileInputDisplayName)
+        ],
+      [ProfileInputs.ProfileInputPhone]:
+        profileData[getProfileInputKey(ProfileInputs.ProfileInputPhone)],
+    } as EditProfileForm;
   }
 }
 

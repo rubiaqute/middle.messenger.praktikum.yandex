@@ -8,6 +8,7 @@ import { Button } from "../button";
 import { deleteFromDom, renderInDom } from "../../utils/helpers";
 import { ChatCreate } from "./chat-create";
 import { ChatController } from "../../controllers/chat-controller";
+import { Page, router } from "../../app";
 
 export interface ChatListProps extends BasicBlockProps {
   _id: string;
@@ -31,7 +32,9 @@ export class ChatList extends Block<ChatListProps> {
       }),
       Link: new Link({
         _id: "Link",
-        href: "/settings",
+        events: {
+          click: () => router.go(Page.settings)
+        },
         text: "Профиль >",
       }),
       SearchInput: new SearchInput({
