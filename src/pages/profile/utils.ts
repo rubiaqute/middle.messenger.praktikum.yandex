@@ -1,11 +1,14 @@
-export interface ProfileData {
-  email: string;
-  login: string;
-  firstName: string;
-  secondName: string;
-  phone: string;
-  displayName: string;
-  password: string;
+import { FetchData } from "../../api/api-service";
+
+export interface ProfileData extends FetchData {
+  id?: number,
+  first_name: string,
+  second_name: string,
+  display_name: string | null,
+  login: string,
+  avatar: string | null,
+  email: string,
+  phone: string
 }
 
 export enum ProfileInputs {
@@ -41,9 +44,9 @@ export const getProfileInputKey = (profileInputId: FilledProfileInputs) => {
   const dictionary: Record<FilledProfileInputs, keyof ProfileData> = {
     [ProfileInputs.ProfileInputEmail]: "email",
     [ProfileInputs.ProfileInputLogin]: "login",
-    [ProfileInputs.ProfileInputFirstName]: "firstName",
-    [ProfileInputs.ProfileInputSecondName]: "secondName",
-    [ProfileInputs.ProfileInputDisplayName]: "displayName",
+    [ProfileInputs.ProfileInputFirstName]: 'first_name',
+    [ProfileInputs.ProfileInputSecondName]: "second_name",
+    [ProfileInputs.ProfileInputDisplayName]: "display_name",
     [ProfileInputs.ProfileInputPhone]: "phone",
     [ProfileInputs.ProfileInputOldPassword]: "password",
   };

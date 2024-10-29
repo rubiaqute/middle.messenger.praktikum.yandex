@@ -1,8 +1,8 @@
-export { loginPage } from "./login";
-export { ErrorPage } from "./error";
+export { LoginPage, loginPage } from "./login";
+export { ErrorNotFoundPage, ErrorServerPage } from "./error";
 export type { ErrorPageProps } from "./error";
-export { registrationPage } from "./registartion";
-export { ProfilePage } from "./profile";
+export { RegistrationPage } from "./registartion";
+export { ProfileChangePasswordPage, ProfileEditPage, ProfileSettingsPage } from "./profile";
 export type { ProfilePageProps } from "./profile";
-export { chatPage } from "./chat";
+export { ChatPage } from "./chat";
 export type { IChatItem, IMessage } from "./chat";

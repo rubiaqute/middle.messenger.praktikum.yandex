@@ -14,12 +14,20 @@
     gap: 12px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--fill-color);
+
+    .subtitle {
+      color: var(--caption-color);
+
+      @mixin text-font 9px;
+    }
   }
 
   .message-list {
     display: flex;
     flex-direction: column;
     justify-content: end;
+    overflow-y: auto;
+    height: 100%;
   }
 
   .button-wrapper {
@@ -42,13 +50,5 @@
         display: block;
       }
     }
-  }
-
-  .avatar-wrapper {
-    margin: auto;
-    width: 37px;
-    height: 37px;
-    background-color: var(--fill-color);
-    border-radius: 50%;
   }
 }
