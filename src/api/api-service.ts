@@ -1,4 +1,4 @@
-enum METHODS {
+export enum METHODS {
     GET = 'GET',
     PUT = 'PUT',
     POST = 'POST',
@@ -7,7 +7,7 @@ enum METHODS {
 
 export type FetchData = Record<string, unknown>
 
-type FetchOptions = {
+export type FetchOptions = {
     method?: METHODS,
     data?: FetchData | FormData,
     headers?: Record<string, string>
