@@ -1,4 +1,4 @@
-import { FetchOptions, HTTPTransport, METHODS } from "../api-service.ts";
+import { FetchOptions, HTTPTransport, METHODS } from "../api-service";
 import { expect, use } from 'chai'
 import * as sinonChai from 'sinon-chai'
 import { createSandbox, SinonStub } from 'sinon'
