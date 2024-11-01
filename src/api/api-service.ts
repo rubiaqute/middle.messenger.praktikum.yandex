@@ -1,4 +1,4 @@
-enum METHODS {
+export enum METHODS {
     GET = 'GET',
     PUT = 'PUT',
     POST = 'POST',
@@ -7,7 +7,7 @@ enum METHODS {
 
 export type FetchData = Record<string, unknown>
 
-type FetchOptions = {
+export type FetchOptions = {
     method?: METHODS,
     data?: FetchData | FormData,
     headers?: Record<string, string>
@@ -32,7 +32,7 @@ function queryStringify(data: FetchData) {
 export const BASE_URL = 'https://ya-praktikum.tech/api/v2'
 
 export class HTTPTransport {
-    get: FetchMethod = (url: string, options = {}) => {
+    get: FetchMethod = (url, options = {}) => {
         return this.request(url, { ...options, method: METHODS.GET }, options.timeout)
     }
 
